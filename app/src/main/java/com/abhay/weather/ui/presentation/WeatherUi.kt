@@ -39,71 +39,81 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun WeatherUi(
+    state: WeatherState,
     color: Color,
     modifier: Modifier = Modifier
 ) {
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        containerColor = color
-    ) {
-        Column(
+
+    state.weatherInfo?.currentWeatherData?.let {data->
+        Scaffold(
             modifier = modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            containerColor = color
         ) {
-            Row(
-                modifier = modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+            Column(
+                modifier = modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Paris",
-                    fontSize = 35.sp,
-                    color = Color.Black
-                )
-            }
-            Spacer(modifier = modifier.height(20.dp))
-            Row(
-                modifier = modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Card(
-                    modifier = modifier,
-                    colors = CardDefaults.cardColors(Color.Black)
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Friday, 20 January",
-                        fontSize = 15.sp,
-                        color = color,
-                        style = MaterialTheme.typography.labelSmall,
-                        modifier = modifier.padding(10.dp, 2.dp, 10.dp, 2.dp)
+                        text = "Paris",
+                        fontSize = 35.sp,
+                        color = Color.Black
                     )
                 }
-            }
-            Spacer(modifier = modifier.height(16.dp))
-            Row(
-                modifier = modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "Sunny",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.Black
+                Spacer(modifier = modifier.height(20.dp))
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Card(
+                        modifier = modifier,
+                        colors = CardDefaults.cardColors(Color.Black)
+                    ) {
+                        Text(
+                            text = "Friday, 20 January",
+                            fontSize = 15.sp,
+                            color = color,
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = modifier.padding(10.dp, 2.dp, 10.dp, 2.dp)
+                        )
+                    }
+                }
+                Spacer(modifier = modifier.height(16.dp))
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = data.weatherType.weatherDesc,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.Black
+                    )
+                }
+                Temp(temp = data.temperatureCelsius)
+                Spacer(modifier = modifier.height(16.dp))
+                WeatherInfoCard(
+                    color = color,
+                    windSpeed = data.windSpeed.toInt(),
+                    humidity = data.humidity.toInt()
                 )
-            }
-            Temp(temp = "31")
-            Spacer(modifier = modifier.height(16.dp))
-            WeatherInfoCard(color = color)
 
+            }
         }
     }
 }
 
 @Composable
 fun WeatherInfoCard(
-    modifier : Modifier = Modifier,
-    color: Color
+    modifier: Modifier = Modifier,
+    color: Color,
+    windSpeed: Int,
+    humidity: Int,
 ) {
     Card(
         modifier = modifier
@@ -112,7 +122,7 @@ fun WeatherInfoCard(
             .padding(25.dp, 0.dp, 25.dp, 0.dp),
         colors = CardDefaults.cardColors(Color.Black),
 
-    ) {
+        ) {
         Row(
             modifier = modifier
                 .padding(10.dp)
@@ -128,7 +138,7 @@ fun WeatherInfoCard(
                     speed = 1.toFloat()
                 )
                 Text(
-                    text = "4 km/h",
+                    text = "$windSpeed km/h",
                     fontSize = 20.sp,
                     color = color
                 )
@@ -148,7 +158,7 @@ fun WeatherInfoCard(
                     modifier = modifier.size(55.dp)
                 )
                 Text(
-                    text = "48 %",
+                    text = "$humidity %",
                     fontSize = 20.sp,
                     color = color
                 )
@@ -202,7 +212,7 @@ fun LottieImage(
 @Composable
 fun Temp(
     modifier: Modifier = Modifier,
-    temp: String
+    temp: Double
 ) {
     Row(
         modifier = modifier
@@ -211,10 +221,9 @@ fun Temp(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "$temp°",
+            text = "${temp.toInt()}°C",
             style = MaterialTheme.typography.bodyLarge,
             fontSize = 160.sp,
-            modifier = Modifier.offset(x = 10.dp, y = (-40).dp),
             color = Color.Black
         )
     }
