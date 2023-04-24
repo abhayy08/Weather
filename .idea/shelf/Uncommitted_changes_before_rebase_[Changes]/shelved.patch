@@ -1,0 +1,198 @@
+Index: app/src/main/java/com/abhay/weather/ui/presentation/MainActivity.kt
+===================================================================
+diff --git a/app/src/main/java/com/abhay/weather/ui/presentation/MainActivity.kt b/app/src/main/java/com/abhay/weather/ui/presentation/MainActivity.kt
+--- a/app/src/main/java/com/abhay/weather/ui/presentation/MainActivity.kt	
++++ b/app/src/main/java/com/abhay/weather/ui/presentation/MainActivity.kt	
+@@ -7,21 +7,13 @@
+ import androidx.compose.foundation.layout.Box
+ import androidx.compose.foundation.layout.fillMaxSize
+ import androidx.compose.foundation.layout.padding
+-import androidx.compose.material3.MaterialTheme
+-import androidx.compose.material3.Surface
+-import androidx.compose.material3.Text
+-import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.getValue
+ import androidx.compose.runtime.mutableStateOf
+ import androidx.compose.runtime.remember
+ import androidx.compose.ui.Modifier
+-import androidx.compose.ui.modifier.modifierLocalConsumer
+-import androidx.compose.ui.tooling.preview.Preview
+ import androidx.compose.ui.unit.dp
+-import androidx.compose.ui.unit.sp
+ import com.abhay.weather.ui.theme.WeatherTheme
+ import com.abhay.weather.ui.theme.blue
+-import com.abhay.weather.ui.theme.yellow
+ 
+ class MainActivity : ComponentActivity() {
+     override fun onCreate(savedInstanceState: Bundle?) {
+Index: app/src/main/java/com/abhay/weather/ui/presentation/WeatherUi.kt
+===================================================================
+diff --git a/app/src/main/java/com/abhay/weather/ui/presentation/WeatherUi.kt b/app/src/main/java/com/abhay/weather/ui/presentation/WeatherUi.kt
+--- a/app/src/main/java/com/abhay/weather/ui/presentation/WeatherUi.kt	
++++ b/app/src/main/java/com/abhay/weather/ui/presentation/WeatherUi.kt	
+@@ -1,18 +1,11 @@
+ package com.abhay.weather.ui.presentation
+ 
+ import android.annotation.SuppressLint
+-import android.media.Image
+ import androidx.annotation.RawRes
+-import androidx.compose.animation.expandHorizontally
+-import androidx.compose.foundation.Image
+-import androidx.compose.foundation.background
+-import androidx.compose.foundation.border
+ import androidx.compose.foundation.layout.Arrangement
+-import androidx.compose.foundation.layout.Box
+ import androidx.compose.foundation.layout.Column
+ import androidx.compose.foundation.layout.Row
+ import androidx.compose.foundation.layout.Spacer
+-import androidx.compose.foundation.layout.fillMaxHeight
+ import androidx.compose.foundation.layout.fillMaxSize
+ import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.height
+@@ -26,20 +19,13 @@
+ import androidx.compose.material3.ExperimentalMaterial3Api
+ import androidx.compose.material3.MaterialTheme
+ import androidx.compose.material3.Scaffold
+-import androidx.compose.material3.Surface
+ import androidx.compose.material3.Text
+-import androidx.compose.material3.Typography
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.getValue
+-import androidx.compose.runtime.remember
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+-import androidx.compose.ui.draw.blur
+ import androidx.compose.ui.draw.clip
+ import androidx.compose.ui.graphics.Color
+-import androidx.compose.ui.graphics.Shape
+-import androidx.compose.ui.layout.ContentScale
+-import androidx.compose.ui.res.painterResource
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+ import com.abhay.weather.R
+@@ -57,15 +43,15 @@
+     modifier: Modifier = Modifier
+ ) {
+     Scaffold(
+-        modifier = Modifier.fillMaxSize(),
++        modifier = modifier.fillMaxSize(),
+         containerColor = color
+     ) {
+         Column(
+-            modifier = Modifier.fillMaxSize(),
++            modifier = modifier.fillMaxSize(),
+             horizontalAlignment = Alignment.CenterHorizontally
+         ) {
+             Row(
+-                modifier = Modifier.fillMaxWidth(),
++                modifier = modifier.fillMaxWidth(),
+                 verticalAlignment = Alignment.CenterVertically,
+                 horizontalArrangement = Arrangement.Center
+             ) {
+@@ -75,14 +61,14 @@
+                     color = Color.Black
+                 )
+             }
+-            Spacer(modifier = Modifier.height(20.dp))
++            Spacer(modifier = modifier.height(20.dp))
+             Row(
+-                modifier = Modifier.fillMaxWidth(),
++                modifier = modifier.fillMaxWidth(),
+                 verticalAlignment = Alignment.CenterVertically,
+                 horizontalArrangement = Arrangement.Center
+             ) {
+                 Card(
+-                    modifier = Modifier,
++                    modifier = modifier,
+                     colors = CardDefaults.cardColors(Color.Black)
+                 ) {
+                     Text(
+@@ -90,13 +76,13 @@
+                         fontSize = 15.sp,
+                         color = color,
+                         style = MaterialTheme.typography.labelSmall,
+-                        modifier = Modifier.padding(10.dp, 2.dp, 10.dp, 2.dp)
++                        modifier = modifier.padding(10.dp, 2.dp, 10.dp, 2.dp)
+                     )
+                 }
+             }
+-            Spacer(modifier = Modifier.height(16.dp))
++            Spacer(modifier = modifier.height(16.dp))
+             Row(
+-                modifier = Modifier.fillMaxWidth(),
++                modifier = modifier.fillMaxWidth(),
+                 verticalAlignment = Alignment.CenterVertically,
+                 horizontalArrangement = Arrangement.Center
+             ) {
+@@ -107,7 +93,7 @@
+                 )
+             }
+             Temp(temp = "31")
+-            Spacer(modifier = Modifier.height(16.dp))
++            Spacer(modifier = modifier.height(16.dp))
+             WeatherInfoCard(color = color)
+ 
+         }
+@@ -120,7 +106,7 @@
+     color: Color
+ ) {
+     Card(
+-        modifier = Modifier
++        modifier = modifier
+             .clip(RoundedCornerShape(16.dp))
+             .wrapContentSize()
+             .padding(25.dp, 0.dp, 25.dp, 0.dp),
+@@ -128,7 +114,7 @@
+ 
+     ) {
+         Row(
+-            modifier = Modifier
++            modifier = modifier
+                 .padding(10.dp)
+                 .fillMaxWidth(),
+             verticalAlignment = Alignment.CenterVertically,
+@@ -159,7 +145,7 @@
+                 LottieImage(
+                     id = if (color == yellow) R.raw.drop_yellow else R.raw.drop_blue,
+                     speed = 1.2.toFloat(),
+-                    modifier = Modifier.size(55.dp)
++                    modifier = modifier.size(55.dp)
+                 )
+                 Text(
+                     text = "48 %",
+@@ -178,7 +164,7 @@
+             ) {
+                 LottieImage(
+                     id = if (color == yellow) R.raw.eye_yellow else R.raw.eye_blue,
+-                    modifier = Modifier.offset(y = (-10).dp),
++                    modifier = modifier.offset(y = (-10).dp),
+                     speed = 0.8.toFloat()
+                 )
+                 Text(
+@@ -207,7 +193,7 @@
+     LottieAnimation(
+         composition = composition,
+         iterations = LottieConstants.IterateForever,
+-        modifier = Modifier.size(60.dp),
++        modifier = modifier.size(60.dp),
+         speed = speed,
+         alignment = Alignment.Center
+     )
+@@ -219,7 +205,7 @@
+     temp: String
+ ) {
+     Row(
+-        modifier = Modifier
++        modifier = modifier
+             .fillMaxWidth(),
+         horizontalArrangement = Arrangement.Center,
+         verticalAlignment = Alignment.CenterVertically
+@@ -228,7 +214,7 @@
+             text = "$temp°",
+             style = MaterialTheme.typography.bodyLarge,
+             fontSize = 160.sp,
+-            modifier = Modifier.offset(x = 10.dp, y = (-40).dp),
++            modifier = modifier.offset(x = 10.dp, y = (-40).dp),
+             color = Color.Black
+         )
+     }
