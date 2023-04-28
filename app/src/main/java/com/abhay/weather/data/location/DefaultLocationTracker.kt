@@ -41,35 +41,31 @@ class DefaultLocationTracker @Inject constructor(
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
-        val locationManager =
-            application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        if (!hasAccessCoarseLocationPermission || !hasAccessFineLocationPermission || !isGpsEnabled) {
+        if (!hasAccessFineLocationPermission || !hasAccessCoarseLocationPermission) {
             return null
         }
 
-        val request = LocationRequest.Builder(Priority.PRIORITY_BALANCED_POWER_ACCURACY, 1000)
+        val request = LocationRequest.Builder(PRIORITY_HIGH_ACCURACY,10000)
+            .setMinUpdateIntervalMillis(5000)
             .build()
 
         val deferred = CompletableDeferred<Location?>()
 
-            val locationCallback = object : LocationCallback() {
-                override fun onLocationResult(result: LocationResult) {
-                    result ?: return
-                    val location = result.locations.firstOrNull()
-                    location?.let {
-                        deferred.complete(it)
-                        Log.d("Location123", "Latitude: ${it.latitude}, Longitude: ${it.longitude}")
-                        locationClient.removeLocationUpdates(this)
-                    }
+        val locationCallback = object : LocationCallback() {
+            override fun onLocationResult(result: LocationResult) {
+                val location = result.locations.firstOrNull()
+                location?.let {
+                    deferred.complete(it)
+                    locationClient.removeLocationUpdates(this)
+                    Log.d("Location123", "Latitude: ${it.latitude}, Longitude: ${it.longitude}")
                 }
             }
+        }
 
-           locationClient.requestLocationUpdates(request, locationCallback, null)
+        locationClient.requestLocationUpdates(request, locationCallback, null)
 
-            return deferred.await()
+        return deferred.await()
+    }
 //        suspendCancellableCoroutine { cont ->
 //            locationClient.lastLocation.apply {
 //                if (isComplete) {
@@ -92,4 +88,3 @@ class DefaultLocationTracker @Inject constructor(
 //            }
 //        }
     }
-}
