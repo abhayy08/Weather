@@ -43,6 +43,7 @@ fun WeatherUi(
     color: Color,
     modifier: Modifier = Modifier
 ) {
+    val locationName = state.locationName
 
     state.weatherInfo?.currentWeatherData?.let {data->
         Scaffold(
@@ -59,7 +60,7 @@ fun WeatherUi(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "data.locationName",
+                        text = locationName?: " ",
                         fontSize = 35.sp,
                         color = Color.Black
                     )
@@ -100,7 +101,7 @@ fun WeatherUi(
                 WeatherInfoCard(
                     color = color,
                     windSpeed = data.windSpeed.toInt(),
-                    humidity = data.humidity
+                    humidity = data.humidity.toInt()
                 )
 
             }

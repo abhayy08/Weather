@@ -44,6 +44,13 @@ class WeatherViewModel @Inject constructor(
                         )
                     }
                 }
+
+                val locationName = repository.getLocationName(location.latitude, location.longitude)
+                state = state.copy(
+                    locationName = locationName
+                )
+
+
             } ?: kotlin.run {
                 state = state.copy(
                     isLoading = false,

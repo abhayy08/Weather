@@ -28,7 +28,7 @@ object AppModule {
     @Singleton
     fun provideWeatherApi(): WeatherApi {
         return Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/data/2.5/")
+            .baseUrl("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/")
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
             .create()

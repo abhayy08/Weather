@@ -1,20 +1,18 @@
 package com.abhay.weather.data.mappers
 
-import com.abhay.weather.data.remote.WeatherDto
+import com.abhay.weather.data.remote.WeatherDto2
 import com.abhay.weather.domain.weather.CurrentWeatherDetails
-import com.abhay.weather.domain.weather.WeatherData
 import com.abhay.weather.domain.weather.WeatherInfo
 
-fun WeatherDto.toWeatherInfo(): WeatherInfo {
-    val weatherDec = weather[0].description!!
-    val temp = main!!.temp
-    val feelsLike = main!!.feelsLike
-    val pressure = main!!.pressure
-    val humidity = main!!.humidity
-    val windSpeed = wind!!.speed
-    val sunrise = sys!!.sunrise
-    val sunset = sys!!.sunset
-    val name = name!!
+fun WeatherDto2.toWeatherInfo(): WeatherInfo {
+    val weatherDec = currentConditions.conditions
+    val temp = currentConditions.temp
+    val feelsLike = currentConditions.feelslike
+    val pressure = currentConditions.pressure
+    val humidity = currentConditions.humidity
+    val windSpeed = currentConditions.windspeed
+    val sunrise = currentConditions.sunrise
+    val sunset = currentConditions.sunset
     val currentWeather = CurrentWeatherDetails(
         weatherDec,
         temp,
@@ -23,8 +21,7 @@ fun WeatherDto.toWeatherInfo(): WeatherInfo {
         humidity,
         windSpeed,
         sunrise,
-        sunset,
-        name
+        sunset
     )
 
 
