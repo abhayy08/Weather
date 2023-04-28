@@ -59,7 +59,7 @@ fun WeatherUi(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Paris",
+                        text = "data.locationName",
                         fontSize = 35.sp,
                         color = Color.Black
                     )
@@ -90,17 +90,17 @@ fun WeatherUi(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = data.weatherType.weatherDesc,
+                        text = data.weatherDesc,
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.Black
                     )
                 }
-                Temp(temp = data.temperatureCelsius)
+                Temp(temp = data.temp)
                 Spacer(modifier = modifier.height(16.dp))
                 WeatherInfoCard(
                     color = color,
                     windSpeed = data.windSpeed.toInt(),
-                    humidity = data.humidity.toInt()
+                    humidity = data.humidity
                 )
 
             }
