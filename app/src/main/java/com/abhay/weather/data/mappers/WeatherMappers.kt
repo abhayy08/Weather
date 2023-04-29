@@ -25,7 +25,7 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
         windSpeed,
         sunrise,
         sunset,
-        currentWeatherSummary
+        currentWeatherSummary,
     )
     return WeatherInfo(
         currentWeatherData = currentWeather,

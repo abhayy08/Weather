@@ -2,6 +2,12 @@ package com.abhay.weather.ui.presentation
 
 import android.annotation.SuppressLint
 import androidx.annotation.RawRes
+import androidx.compose.foundation.OverscrollEffect
+import androidx.compose.foundation.clipScrollableContainer
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.ScrollableDefaults
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,7 +51,8 @@ fun WeatherUi(
 
     state.weatherInfo?.currentWeatherData?.let {data->
         Scaffold(
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier
+                .fillMaxSize(),
             containerColor = color
         ) {
             Column(
@@ -101,7 +108,8 @@ fun WeatherUi(
                     windSpeed = data.windSpeed.toInt(),
                     humidity = data.humidity.toInt()
                 )
-
+                Spacer(modifier = modifier.height(20.dp))
+                WeatherForecast(state = state,color = color)
             }
         }
     }
@@ -118,7 +126,7 @@ fun WeatherInfoCard(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .wrapContentSize()
-            .padding(25.dp, 0.dp, 25.dp, 0.dp),
+            .padding(horizontal = 20.dp),
         colors = CardDefaults.cardColors(Color.Black),
 
         ) {
@@ -222,7 +230,7 @@ fun Temp(
         Text(
             text = "${temp.toInt()}°C",
             style = MaterialTheme.typography.bodyLarge,
-            fontSize = 160.sp,
+            fontSize = 170.sp,
             color = Color.Black
         )
     }
