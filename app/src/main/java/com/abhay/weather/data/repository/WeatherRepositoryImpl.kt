@@ -18,7 +18,7 @@ import kotlin.coroutines.suspendCoroutine
 class WeatherRepositoryImpl @Inject constructor(
     private val api: WeatherApi,
     private val app: Application
-): WeatherRepository {
+) : WeatherRepository {
 
     override suspend fun getWeatherData(lat: Double, long: Double): Resource<WeatherInfo> {
         return try {
@@ -28,7 +28,7 @@ class WeatherRepositoryImpl @Inject constructor(
                     long = long
                 ).toWeatherInfo()
             )
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Error(e.message ?: "An unknown error occurred.")
         }
@@ -36,10 +36,19 @@ class WeatherRepositoryImpl @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override suspend fun getLocationName(lat: Double, long: Double): String {
-        return suspendCoroutine{cont->
+        return suspendCoroutine { cont ->
             val geocoder = Geocoder(app, Locale.getDefault())
-            val addressList =
-                geocoder.getFromLocation(lat, long, 1, object : Geocoder.GeocodeListener {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                val addressList = geocoder.getFromLocation(lat, long, 1)
+                 if (addressList!!.isNotEmpty()) {
+                    val address = addressList[0]
+                    cont.resume(address.locality)
+                } else {
+                   cont.resume("")
+                }
+            } else {
+                geocoder.getFromLocation(lat, long, 1,
+                object : Geocoder.GeocodeListener {
                     override fun onGeocode(results: MutableList<Address>) {
                         if (results.isNotEmpty()) {
                             val address = results[0]
@@ -51,6 +60,7 @@ class WeatherRepositoryImpl @Inject constructor(
                     }
 
                 })
+            }
         }
 
 

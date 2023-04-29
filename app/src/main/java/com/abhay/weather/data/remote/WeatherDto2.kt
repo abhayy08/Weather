@@ -10,7 +10,6 @@ data class WeatherDto2(
     val longitude: Double,
     val queryCost: Int,
     val resolvedAddress: String,
-    val stations: Stations,
     val timezone: String,
     val tzoffset: Double
 )

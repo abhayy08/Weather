@@ -9,6 +9,7 @@ import com.abhay.weather.domain.location.LocationTracker
 import com.abhay.weather.domain.repository.WeatherRepository
 import com.abhay.weather.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,9 +17,9 @@ import javax.inject.Inject
 class WeatherViewModel @Inject constructor(
     private val repository: WeatherRepository,
     private val locationTracker: LocationTracker
-): ViewModel() {
+) : ViewModel() {
 
-     var state by mutableStateOf(WeatherState())
+    var state by mutableStateOf(WeatherState())
         private set
 
     fun loadWeatherInfo() {
@@ -28,14 +29,26 @@ class WeatherViewModel @Inject constructor(
                 error = null
             )
             locationTracker.getCurrentLocation()?.let { location ->
-                when(val result = repository.getWeatherData(location.latitude, location.longitude)) {
+
+
+                val locationName = repository.getLocationName(location.latitude, location.longitude)
+                state = state.copy(
+
+                )
+
+
+                when (val result =
+                    repository.getWeatherData(location.latitude, location.longitude)) {
                     is Resource.Success -> {
                         state = state.copy(
-                            weatherInfo = result.data,
+                            weatherInfo = result.data.also {
+                                it?.locationName = locationName
+                            },
                             isLoading = false,
                             error = null
                         )
                     }
+
                     is Resource.Error -> {
                         state = state.copy(
                             weatherInfo = null,
@@ -44,11 +57,6 @@ class WeatherViewModel @Inject constructor(
                         )
                     }
                 }
-
-                val locationName = repository.getLocationName(location.latitude, location.longitude)
-                state = state.copy(
-                    locationName = locationName
-                )
 
 
             } ?: kotlin.run {

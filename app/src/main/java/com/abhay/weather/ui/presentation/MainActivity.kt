@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.abhay.weather.ui.theme.WeatherTheme
 import com.abhay.weather.ui.theme.blue
-import com.abhay.weather.ui.theme.yellow
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -9,6 +9,6 @@ data class CurrentWeatherDetails(
     val windSpeed: Double,
     val sunrise: String,
     val sunset: String,
-//    val locationName: String
+    val currentWeatherSummary: String
 
 )

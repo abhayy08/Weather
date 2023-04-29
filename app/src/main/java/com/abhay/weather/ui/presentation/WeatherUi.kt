@@ -29,7 +29,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abhay.weather.R
-import com.abhay.weather.ui.theme.yellow
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -43,7 +42,6 @@ fun WeatherUi(
     color: Color,
     modifier: Modifier = Modifier
 ) {
-    val locationName = state.locationName
 
     state.weatherInfo?.currentWeatherData?.let {data->
         Scaffold(
@@ -60,7 +58,7 @@ fun WeatherUi(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = locationName?: " ",
+                        text = state.weatherInfo.locationName,
                         fontSize = 35.sp,
                         color = Color.Black
                     )
@@ -135,7 +133,7 @@ fun WeatherInfoCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LottieImage(
-                    id = if (color == yellow) R.raw.wind_yellow else R.raw.wind_blue,
+                    id = R.raw.wind_blue,
                     speed = 1.toFloat()
                 )
                 Text(
@@ -154,7 +152,7 @@ fun WeatherInfoCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LottieImage(
-                    id = if (color == yellow) R.raw.drop_yellow else R.raw.drop_blue,
+                    id = R.raw.drop_blue,
                     speed = 1.2.toFloat(),
                     modifier = modifier.size(55.dp)
                 )
@@ -174,7 +172,7 @@ fun WeatherInfoCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LottieImage(
-                    id = if (color == yellow) R.raw.eye_yellow else R.raw.eye_blue,
+                    id = R.raw.eye_blue,
                     modifier = modifier.offset(y = (-10).dp),
                     speed = 0.8.toFloat()
                 )

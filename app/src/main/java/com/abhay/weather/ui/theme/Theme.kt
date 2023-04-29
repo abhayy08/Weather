@@ -16,18 +16,17 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val UiColorScheme = darkColorScheme(
     primary = blue,
-    secondary = yellow,
-    tertiary = green
 )
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun WeatherTheme(
-    color: Color = yellow,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    color: Color = blue,
+    darkTheme: Boolean = true,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -43,10 +42,16 @@ fun WeatherTheme(
 //    }
     val view = LocalView.current
 //    if (!view.isInEditMode) {
+        val systemUiController = rememberSystemUiController()
         SideEffect {
+            systemUiController.setSystemBarsColor(
+                color = Color.Black,
+                darkIcons = true,
+            )
             val window = (view.context as Activity).window
             window.statusBarColor = color.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            WindowCompat.getInsetsController(window, view)
+                .isAppearanceLightStatusBars = darkTheme
         }
  //   }
 

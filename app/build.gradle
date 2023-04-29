@@ -1,8 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.dagger.hilt.android'
@@ -70,6 +70,9 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.0"
+
 
     //Lottie (Animation)
     implementation "com.airbnb.android:lottie-compose:4.2.0"

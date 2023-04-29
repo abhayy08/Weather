@@ -13,6 +13,9 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
     val windSpeed = currentConditions.windspeed
     val sunrise = currentConditions.sunrise
     val sunset = currentConditions.sunset
+    val currentWeatherSummary = days[0].description
+    val listOfDays = days
+    val currentHourlyForecast = days[0].hours
     val currentWeather = CurrentWeatherDetails(
         weatherDec,
         temp,
@@ -21,12 +24,14 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
         humidity,
         windSpeed,
         sunrise,
-        sunset
+        sunset,
+        currentWeatherSummary
     )
-
-
     return WeatherInfo(
-        currentWeatherData = currentWeather
+        currentWeatherData = currentWeather,
+        weatherForecastDetails = listOfDays,
+        currentHourlyForecast = currentHourlyForecast,
+        locationName = ""
     )
 
 }
