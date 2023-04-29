@@ -3,6 +3,8 @@ package com.abhay.weather.domain.weather
 data class CurrentWeatherDetails(
     val weatherDesc: String,
     val temp: Double,
+    val tempMax: Double,
+    val tempMin: Double,
     val feelsLike: Double,
     val pressure: Int,
     val humidity: Double,

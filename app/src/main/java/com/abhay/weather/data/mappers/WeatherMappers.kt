@@ -16,16 +16,20 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
     val currentWeatherSummary = days[0].description
     val listOfDays = days
     val currentHourlyForecast = days[0].hours
+    val tempMax = days[0].tempmax
+    val tempMin = days[0].tempmin
     val currentWeather = CurrentWeatherDetails(
-        weatherDec,
-        temp,
-        feelsLike,
-        pressure,
-        humidity,
-        windSpeed,
-        sunrise,
-        sunset,
-        currentWeatherSummary,
+        weatherDesc = weatherDec,
+        temp = temp,
+        feelsLike = feelsLike,
+        pressure = pressure,
+        humidity = humidity,
+        windSpeed = windSpeed,
+        sunrise = sunrise,
+        sunset = sunset,
+        currentWeatherSummary = currentWeatherSummary,
+        tempMax = tempMax,
+        tempMin = tempMin
     )
     return WeatherInfo(
         currentWeatherData = currentWeather,

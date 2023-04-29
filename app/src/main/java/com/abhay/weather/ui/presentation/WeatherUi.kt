@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abhay.weather.R
@@ -102,6 +103,9 @@ fun WeatherUi(
                     )
                 }
                 Temp(temp = data.temp)
+                DailySummary(
+                    state = state,
+                )
                 Spacer(modifier = modifier.height(16.dp))
                 WeatherInfoCard(
                     color = color,
@@ -111,6 +115,42 @@ fun WeatherUi(
                 Spacer(modifier = modifier.height(20.dp))
                 WeatherForecast(state = state,color = color)
             }
+        }
+    }
+}
+
+@Composable
+fun DailySummary(
+    state: WeatherState,
+    modifier: Modifier = Modifier
+) {
+    state.weatherInfo?.currentWeatherData?.let{data->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 25.dp),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = "Daily Summary",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Black,
+                fontSize = 20.sp
+            )
+            Spacer(modifier = Modifier.height(3.dp))
+            Text(
+                text = data.currentWeatherSummary,
+                style = MaterialTheme.typography.labelSmall,
+                fontSize = 18.sp,
+                color = Color.Black
+            )
+            Text(
+                text = "The Temperature is felt in the range of ${data.tempMax}° and ${data.tempMin}°.",
+                style = MaterialTheme.typography.labelSmall,
+                fontSize = 18.sp,
+                color = Color.Black
+            )
         }
     }
 }
