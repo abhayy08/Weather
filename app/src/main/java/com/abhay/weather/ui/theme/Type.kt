@@ -24,6 +24,10 @@ val tSemiBold = FontFamily(
     Font(R.font.tsemibold)
 )
 
+val ledger: FontFamily = FontFamily(
+    Font(R.font.ledger)
+)
+
 
 val Typography = Typography(
     bodyLarge = TextStyle(

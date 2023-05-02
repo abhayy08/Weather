@@ -3,7 +3,9 @@ package com.abhay.weather.ui.presentation
 import android.annotation.SuppressLint
 import androidx.annotation.RawRes
 import androidx.compose.foundation.OverscrollEffect
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clipScrollableContainer
+import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.gestures.ScrollableState
@@ -19,7 +21,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,73 +53,71 @@ fun WeatherUi(
     color: Color,
     modifier: Modifier = Modifier
 ) {
-
-    state.weatherInfo?.currentWeatherData?.let {data->
-        Scaffold(
+    state.weatherInfo?.currentWeatherData?.let { data ->
+        Column(
             modifier = modifier
-                .fillMaxSize(),
-            containerColor = color
+                .fillMaxSize()
+                .padding(10.dp)
+                .verticalScroll(rememberScrollState())
+                .background(color),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
-                Row(
-                    modifier = modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = state.weatherInfo.locationName,
-                        fontSize = 35.sp,
-                        color = Color.Black
-                    )
-                }
-                Spacer(modifier = modifier.height(20.dp))
-                Row(
-                    modifier = modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Card(
-                        modifier = modifier,
-                        colors = CardDefaults.cardColors(Color.Black)
-                    ) {
-                        Text(
-                            text = "Friday, 20 January",
-                            fontSize = 15.sp,
-                            color = color,
-                            style = MaterialTheme.typography.labelSmall,
-                            modifier = modifier.padding(10.dp, 2.dp, 10.dp, 2.dp)
-                        )
-                    }
-                }
-                Spacer(modifier = modifier.height(16.dp))
-                Row(
-                    modifier = modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = data.weatherDesc,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.Black
-                    )
-                }
-                Temp(temp = data.temp)
-                DailySummary(
-                    state = state,
+                Text(
+                    text = state.weatherInfo.locationName,
+                    fontSize = 35.sp,
+                    color = Color.Black
                 )
-                Spacer(modifier = modifier.height(16.dp))
-                WeatherInfoCard(
-                    color = color,
-                    windSpeed = data.windSpeed.toInt(),
-                    humidity = data.humidity.toInt()
-                )
-                Spacer(modifier = modifier.height(20.dp))
-                WeatherForecast(state = state,color = color)
             }
+            Spacer(modifier = modifier.height(15.dp))
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Card(
+                    modifier = modifier,
+                    colors = CardDefaults.cardColors(Color.Black)
+                ) {
+                    Text(
+                        text = data.dateAndDay,
+                        fontSize = 15.sp,
+                        color = color,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = modifier.padding(5.dp)
+                    )
+                }
+            }
+            Spacer(modifier = modifier.height(15.dp))
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = data.weatherDesc,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.Black
+                )
+            }
+            Temp(temp = data.temp)
+            DailySummary(
+                state = state,
+            )
+            Spacer(modifier = modifier.height(16.dp))
+            WeatherInfoCard(
+                color = color,
+                windSpeed = data.windSpeed.toInt(),
+                humidity = data.humidity.toInt(),
+                visibility = data.visibility
+            )
+            WeatherForecast(state = state, color = color)
         }
+
     }
 }
 
@@ -124,34 +126,34 @@ fun DailySummary(
     state: WeatherState,
     modifier: Modifier = Modifier
 ) {
-    state.weatherInfo?.currentWeatherData?.let{data->
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 25.dp),
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(
-                text = "Daily Summary",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black,
-                fontSize = 20.sp
-            )
-            Spacer(modifier = Modifier.height(3.dp))
-            Text(
-                text = data.currentWeatherSummary,
-                style = MaterialTheme.typography.labelSmall,
-                fontSize = 18.sp,
-                color = Color.Black
-            )
-            Text(
-                text = "The Temperature is felt in the range of ${data.tempMax}° and ${data.tempMin}°.",
-                style = MaterialTheme.typography.labelSmall,
-                fontSize = 18.sp,
-                color = Color.Black
-            )
-        }
+    val data = state.weatherInfo!!.currentWeatherData!!
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = "Daily Summary",
+            style = MaterialTheme.typography.bodyLarge,
+            color = Color.Black,
+            fontSize = 20.sp
+        )
+        Spacer(modifier = Modifier.height(3.dp))
+        Text(
+            text = data.currentWeatherSummary,
+            style = MaterialTheme.typography.labelSmall,
+            fontSize = 16.sp,
+            color = Color.Black
+        )
+        Text(
+            text = "The Temperature is felt in the range of ${data.tempMax}° and ${data.tempMin}°.",
+            style = MaterialTheme.typography.labelSmall,
+            fontSize = 16.sp,
+            color = Color.Black
+        )
     }
 }
 
@@ -161,12 +163,14 @@ fun WeatherInfoCard(
     color: Color,
     windSpeed: Int,
     humidity: Int,
+    visibility: Double
 ) {
     Card(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .wrapContentSize()
-            .padding(horizontal = 20.dp),
+            .fillMaxWidth()
+            .padding(15.dp),
         colors = CardDefaults.cardColors(Color.Black),
 
         ) {
@@ -192,7 +196,7 @@ fun WeatherInfoCard(
                 Text(
                     text = "Wind",
                     fontSize = 15.sp,
-                    color = color
+                    color = color.copy(alpha = 0.80f)
                 )
             }
             Column(
@@ -212,7 +216,7 @@ fun WeatherInfoCard(
                 Text(
                     text = "Humidity",
                     fontSize = 15.sp,
-                    color = color
+                    color = color.copy(alpha = 0.80f)
                 )
             }
             Column(
@@ -225,14 +229,14 @@ fun WeatherInfoCard(
                     speed = 0.8.toFloat()
                 )
                 Text(
-                    text = "1.6 km",
+                    text = "$visibility km",
                     fontSize = 20.sp,
                     color = color
                 )
                 Text(
                     text = "Visibility",
                     fontSize = 15.sp,
-                    color = color
+                    color = color.copy(alpha = 0.80f)
                 )
             }
         }

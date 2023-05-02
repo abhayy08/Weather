@@ -1,5 +1,6 @@
 package com.abhay.weather.ui.presentation
 
+import android.icu.util.LocaleData
 import android.print.PrintAttributes.Margins
 import android.util.SparseArray
 import android.widget.Space
@@ -12,6 +13,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abhay.weather.data.remote.Day
 import com.abhay.weather.ui.theme.blue
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
 fun WeatherForecast(
@@ -49,7 +54,7 @@ fun WeatherForecast(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+                .padding(10.dp)
         ) {
             Row(
                 modifier = modifier
@@ -70,11 +75,16 @@ fun WeatherForecast(
                 )
             }
             LazyColumn(
-                modifier = Modifier.height(275.dp),
+                modifier = Modifier
+                    .height(270.dp)
+                    .fillMaxWidth(),
                 userScrollEnabled = true,
                 content = {
-                    items(data) { day ->
-                        InfoCards(data = day)
+                    items(data){
+                        InfoCards(
+                            data = it,
+                            date = LocalDate.parse(it.datetime).format(DateTimeFormatter.ofPattern("E, dd MMM", Locale.ENGLISH))
+                        )
                     }
                 })
 
@@ -86,6 +96,7 @@ fun WeatherForecast(
 fun InfoCards(
     modifier: Modifier = Modifier,
     data: Day,
+    date: String,
     color: Color = blue
 ) {
     Card(
@@ -100,59 +111,58 @@ fun InfoCards(
                 shape = RoundedCornerShape(12.dp)
             )
     ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 15.dp, vertical = 20.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Tomorrow",
-                fontSize = 25.sp,
-                color = Color.Black
-            )
-            Spacer(modifier = Modifier.width(30.dp))
             Row(
-                modifier = Modifier.width(100.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ){
+                modifier = Modifier
+                    .padding(17.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
                 Text(
-                    text = data.conditions,
-                    fontSize = 16.sp,
-                    color = Color.Black,
-                    style = MaterialTheme.typography.labelSmall
+                    text = date,
+                    fontSize = 25.sp,
+                    color = Color.Black
                 )
-            }
-            Spacer(modifier = Modifier.width(60.dp))
-            Box {
-                val size = 25.sp
-                Text(
-                    text = "${data.feelslikemax.toInt()}°",
-                    fontSize = size,
-                    color = Color.Black,
-                    modifier = Modifier.offset(
-                        x = (-25).dp,
-                        y = (-10).dp
+                Row(
+                    modifier = Modifier.width(100.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ){
+                    Text(
+                        text = data.conditions,
+                        fontSize = 15.sp,
+                        color = Color.Black,
+                        style = MaterialTheme.typography.labelSmall
                     )
-                )
-                Text(
-                    text = "/",
-                    fontSize = 30.sp,
-                    color = Color.Black,
-                    modifier = Modifier.offset(
-                        x = (-2).dp
+                }
+                Box {
+                    val size = 25.sp
+                    Text(
+                        text = "${data.feelslikemax.toInt()}°",
+                        fontSize = size,
+                        color = Color.Black,
+                        modifier = Modifier.offset(
+                            x = (-25).dp,
+                            y = (-10).dp
+                        )
                     )
-                )
-                Text(
-                    text = "${data.feelslikemin.toInt()}°",
-                    fontSize = size,
-                    color = Color.Black,
-                    modifier = Modifier.offset(
-                        x = 10.dp,
-                        y = 10.dp
+                    Text(
+                        text = "/",
+                        fontSize = 30.sp,
+                        color = Color.Black,
+                        modifier = Modifier.offset(
+                            x = (-2).dp
+                        )
                     )
-                )
-            }
+                    Text(
+                        text = "${data.feelslikemin.toInt()}°",
+                        fontSize = size,
+                        color = Color.Black,
+                        modifier = Modifier.offset(
+                            x = 10.dp,
+                            y = 10.dp
+                        )
+                    )
+                }
         }
     }
 }
