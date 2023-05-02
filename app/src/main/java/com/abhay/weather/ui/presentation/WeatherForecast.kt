@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -74,95 +75,174 @@ fun WeatherForecast(
                     color = Color.Black
                 )
             }
-            LazyColumn(
-                modifier = Modifier
-                    .height(270.dp)
-                    .fillMaxWidth(),
-                userScrollEnabled = true,
-                content = {
-                    items(data){
-                        InfoCards(
-                            data = it,
-                            date = LocalDate.parse(it.datetime).format(DateTimeFormatter.ofPattern("E, dd MMM", Locale.ENGLISH))
-                        )
-                    }
-                })
+//            LazyColumn(
+//                modifier = Modifier
+//                    .height(270.dp)
+//                    .fillMaxWidth(),
+//                userScrollEnabled = true,
+//                content = {
+//                    items(data) {
+//                        InfoCards(
+//                            data = it,
+//                            date = LocalDate.parse(it.datetime)
+//                                .format(DateTimeFormatter.ofPattern("E, dd MMM", Locale.ENGLISH))
+//                        )
+//                    }
+//                }
+//            )
+
+            LazyRow(content = {
+                items(data) { data ->
+                    InfoCard1(
+                        data = data,
+                        date = LocalDate.parse(data.datetime)
+                            .format(DateTimeFormatter.ofPattern("dd MMM", Locale.ENGLISH))
+                    )
+
+                }
+            })
 
         }
     }
 }
 
 @Composable
-fun InfoCards(
+fun InfoCard1(
     modifier: Modifier = Modifier,
     data: Day,
     date: String,
     color: Color = blue
 ) {
     Card(
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(color),
-        modifier = Modifier
-            .padding(vertical = 5.dp)
+        modifier = modifier
+            .padding(4.dp)
             .fillMaxWidth()
             .border(
-                width = 4.dp,
+                width = 3.dp,
                 color = Color.Black,
                 shape = RoundedCornerShape(12.dp)
-            )
+            ),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(color),
     ) {
-            Row(
-                modifier = Modifier
-                    .padding(17.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
+
+        Column(
+            modifier = modifier.padding(15.dp),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = modifier.padding(30.dp,5.dp,0.dp,0.dp)
+            ){
                 Text(
-                    text = date,
+                    text = "${data.feelslikemax.toInt()}°",
                     fontSize = 25.sp,
-                    color = Color.Black
+                    color = Color.Black,
+                    modifier = Modifier.offset(
+                        x = (-25).dp,
+                        y = (-10).dp
+                    )
                 )
-                Row(
-                    modifier = Modifier.width(100.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ){
-                    Text(
-                        text = data.conditions,
-                        fontSize = 15.sp,
-                        color = Color.Black,
-                        style = MaterialTheme.typography.labelSmall
+                Text(
+                    text = "/",
+                    fontSize = 35.sp,
+                    color = Color.Black,
+                    modifier = Modifier.offset(
+                        x = (-2).dp,
+                        y = (-5).dp
                     )
-                }
-                Box {
-                    val size = 25.sp
-                    Text(
-                        text = "${data.feelslikemax.toInt()}°",
-                        fontSize = size,
-                        color = Color.Black,
-                        modifier = Modifier.offset(
-                            x = (-25).dp,
-                            y = (-10).dp
-                        )
+                )
+                Text(
+                    text = "${data.feelslikemin.toInt()}°",
+                    fontSize = 18.sp,
+                    color = Color.Black,
+                    modifier = Modifier.offset(
+                        x = 10.dp,
+                        y = 10.dp
                     )
-                    Text(
-                        text = "/",
-                        fontSize = 30.sp,
-                        color = Color.Black,
-                        modifier = Modifier.offset(
-                            x = (-2).dp
-                        )
-                    )
-                    Text(
-                        text = "${data.feelslikemin.toInt()}°",
-                        fontSize = size,
-                        color = Color.Black,
-                        modifier = Modifier.offset(
-                            x = 10.dp,
-                            y = 10.dp
-                        )
-                    )
-                }
+                )
+            }
+            Spacer(modifier = modifier.height(5.dp))
+            Text(
+                text = date,
+                fontSize = 18.sp,
+                color = Color.Black
+            )
         }
     }
 }
+
+//@Composable
+//fun InfoCards(
+//    modifier: Modifier = Modifier,
+//    data: Day,
+//    date: String,
+//    color: Color = blue
+//) {
+//    Card(
+//        shape = RoundedCornerShape(12.dp),
+//        colors = CardDefaults.cardColors(color),
+//        modifier = Modifier
+//            .padding(vertical = 5.dp)
+//            .fillMaxWidth()
+//            .border(
+//                width = 4.dp,
+//                color = Color.Black,
+//                shape = RoundedCornerShape(12.dp)
+//            )
+//    ) {
+//        Row(
+//            modifier = Modifier
+//                .padding(17.dp)
+//                .fillMaxWidth(),
+//            horizontalArrangement = Arrangement.SpaceAround
+//        ) {
+//            Text(
+//                text = date,
+//                fontSize = 25.sp,
+//                color = Color.Black
+//            )
+//            Row(
+//                modifier = Modifier.width(100.dp),
+//                verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.Center
+//            ) {
+//                Text(
+//                    text = data.conditions,
+//                    fontSize = 15.sp,
+//                    color = Color.Black,
+//                    style = MaterialTheme.typography.labelSmall
+//                )
+//            }
+//            Box {
+//                val size = 25.sp
+//                Text(
+//                    text = "${data.feelslikemax.toInt()}°",
+//                    fontSize = size,
+//                    color = Color.Black,
+//                    modifier = Modifier.offset(
+//                        x = (-25).dp,
+//                        y = (-10).dp
+//                    )
+//                )
+//                Text(
+//                    text = "/",
+//                    fontSize = 30.sp,
+//                    color = Color.Black,
+//                    modifier = Modifier.offset(
+//                        x = (-2).dp
+//                    )
+//                )
+//                Text(
+//                    text = "${data.feelslikemin.toInt()}°",
+//                    fontSize = size,
+//                    color = Color.Black,
+//                    modifier = Modifier.offset(
+//                        x = 10.dp,
+//                        y = 10.dp
+//                    )
+//                )
+//            }
+//        }
+//    }
+//}
