@@ -113,7 +113,7 @@ fun WeatherUi(
                 color = color,
                 windSpeed = data.windSpeed.toInt(),
                 humidity = data.humidity.toInt(),
-                visibility = data.visibility
+                visibility = data.visibility.toDouble()
             )
             WeatherForecast(state = state, color = color)
         }

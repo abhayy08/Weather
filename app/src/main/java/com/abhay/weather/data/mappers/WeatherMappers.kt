@@ -1,6 +1,5 @@
 package com.abhay.weather.data.mappers
 
-import androidx.compose.ui.text.input.DeleteSurroundingTextCommand
 import com.abhay.weather.data.remote.Day
 import com.abhay.weather.data.remote.WeatherDto2
 import com.abhay.weather.data.repository.database.Days
@@ -23,19 +22,19 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
         val formatted = nearestHour.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
         formatted == hour.datetime
     }
-    val temp = currentHour!!.temp
-    val weatherDesc = currentHour.conditions
-    val feelsLike = currentHour.feelslike
-    val pressure = currentHour.pressure
-    val humidity = currentHour.humidity
-    val windSpeed = currentHour.windspeed
+    val temp = currentConditions.temp
+    val weatherDesc = currentHour!!.conditions
+    val feelsLike = currentConditions.feelslike
+    val pressure = currentConditions.pressure
+    val humidity = currentConditions.humidity
+    val windSpeed = currentConditions.windspeed
     val sunrise = currentConditions.sunrise
     val sunset = currentConditions.sunset
     val currentWeatherSummary = days[0].description
     val currentHourlyForecast = days[0].hours
     val tempMax = days[0].feelslikemax
     val tempMin = days[0].feelslikemin
-    val visibility = currentHour.visibility
+    val visibility = currentConditions.visibility
     val listOfDays = days
 
     val date = days[0].datetime
@@ -74,16 +73,16 @@ fun WeatherDataWithDays.toWeatherInfo(): WeatherInfo {
     val currentWeatherDetails = CurrentWeatherDetails(
         dateAndDay = formattedDate,
         weatherDesc = days[0].conditions,
-        temp = days[0].temp,
+        temp = weatherData.temp,
         tempMax = days[0].feelslikemax,
         tempMin = days[0].feelslikemin,
-        feelsLike = days[0].temp,
-        visibility = days[0].visibility,
-        pressure = days[0].pressure.toInt(),
-        humidity = days[0].humidity,
-        windSpeed = days[0].windspeed,
-        sunrise = days[0].sunrise,
-        sunset = days[0].sunset,
+        feelsLike = weatherData.feelsLike,
+        visibility = weatherData.visibility.toInt(),
+        pressure = weatherData.pressure.toInt(),
+        humidity = weatherData.humidity,
+        windSpeed = weatherData.windSpeed,
+        sunrise = weatherData.sunrise,
+        sunset = weatherData.sunset,
         currentWeatherSummary = days[0].description
     )
 
@@ -135,11 +134,11 @@ fun Day.toDays(id: Int): Days {
         description = description,
         feelslikemax = feelslikemax,
         feelslikemin = feelslikemin,
-        humidity = currentHour.humidity,
-        pressure = currentHour.pressure,
-        temp = currentHour.temp,
-        visibility = currentHour.visibility,
-        windspeed = currentHour.windspeed,
+        humidity = humidity,
+        pressure = pressure,
+        temp = temp,
+        visibility = visibility,
+        windspeed = windspeed,
         sunrise = sunrise,
         sunset = sunset
     )

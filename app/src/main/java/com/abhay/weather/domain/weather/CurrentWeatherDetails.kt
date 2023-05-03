@@ -7,7 +7,7 @@ data class CurrentWeatherDetails(
     val tempMax: Double,
     val tempMin: Double,
     val feelsLike: Double,
-    val visibility: Double,
+    val visibility: Int,
     val pressure: Int,
     val humidity: Double,
     val windSpeed: Double,

@@ -28,25 +28,29 @@ val ledger: FontFamily = FontFamily(
     Font(R.font.ledger)
 )
 
+val nunito: FontFamily = FontFamily(
+    Font(R.font.nunitoregular)
+)
+
 
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = tBold,
+        fontFamily = nunito,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp
     ),
     headlineMedium = TextStyle(
-        fontFamily = tSemiBold,
+        fontFamily = nunito,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp
     ),
     titleLarge = TextStyle(
-        fontFamily = tRegular,
+        fontFamily = nunito,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp
     ),
     labelSmall = TextStyle(
-        fontFamily = tRegular,
+        fontFamily = nunito,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp
     )

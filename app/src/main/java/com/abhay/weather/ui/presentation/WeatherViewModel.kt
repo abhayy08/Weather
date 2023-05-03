@@ -16,6 +16,7 @@ import com.abhay.weather.domain.util.Resource
 import com.abhay.weather.domain.weather.WeatherInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,14 +33,13 @@ class WeatherViewModel @Inject constructor(
     fun loadWeatherInfo() {
         viewModelScope.launch {
             val weatherDataList = dao.getWeatherDataWithDays()
-            val data: WeatherInfo?
-            if (weatherDataList.isNotEmpty()) {
-                data = dao.getWeatherDataWithDays()[0].toWeatherInfo()
-            } else data = null
+            val data: WeatherInfo? = if (weatherDataList.isNotEmpty()) {
+                dao.getWeatherDataWithDays()[0].toWeatherInfo()
+            } else null
 
             state = state.copy(
                 weatherInfo = data,
-                isLoading = true,
+                isLoading = data == null,
                 error = null
             )
 
@@ -57,7 +57,18 @@ class WeatherViewModel @Inject constructor(
                         )
                         val weatherData = WeatherData(
                             id = 0,
-                            locationName = state.weatherInfo!!.locationName
+                            locationName = state.weatherInfo!!.locationName,
+                            temp = state.weatherInfo!!.currentWeatherData!!.temp,
+                            tempMax =state.weatherInfo!!.currentWeatherData!!.tempMax,
+                            tempMin =state.weatherInfo!!.currentWeatherData!!.tempMin,
+                            feelsLike =state.weatherInfo!!.currentWeatherData!!.temp,
+                            visibility =state.weatherInfo!!.currentWeatherData!!.visibility,
+                            pressure =state.weatherInfo!!.currentWeatherData!!.pressure,
+                            humidity =state.weatherInfo!!.currentWeatherData!!.humidity,
+                            windSpeed =state.weatherInfo!!.currentWeatherData!!.windSpeed,
+                            sunrise =state.weatherInfo!!.currentWeatherData!!.sunrise,
+                            sunset =state.weatherInfo!!.currentWeatherData!!.sunset,
+                            currentWeatherSummary =state.weatherInfo!!.currentWeatherData!!.currentWeatherSummary
                         )
                         dao.insertWeatherData(weatherData)
 

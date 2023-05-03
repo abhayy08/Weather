@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -132,15 +133,15 @@ fun InfoCard1(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
-                modifier = modifier.padding(30.dp,5.dp,0.dp,0.dp)
+                modifier = modifier.padding(25.dp,5.dp,0.dp,0.dp)
             ){
                 Text(
                     text = "${data.feelslikemax.toInt()}°",
                     fontSize = 25.sp,
                     color = Color.Black,
                     modifier = Modifier.offset(
-                        x = (-25).dp,
-                        y = (-10).dp
+                        x = (-27).dp,
+                        y = (-5).dp
                     )
                 )
                 Text(
@@ -148,13 +149,13 @@ fun InfoCard1(
                     fontSize = 35.sp,
                     color = Color.Black,
                     modifier = Modifier.offset(
-                        x = (-2).dp,
-                        y = (-5).dp
-                    )
+                        x = (2).dp,
+                        y = (-4).dp
+                    ).rotate(10f)
                 )
                 Text(
                     text = "${data.feelslikemin.toInt()}°",
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     color = Color.Black,
                     modifier = Modifier.offset(
                         x = 10.dp,
@@ -162,10 +163,10 @@ fun InfoCard1(
                     )
                 )
             }
-            Spacer(modifier = modifier.height(5.dp))
+            Spacer(modifier = modifier.height(15.dp))
             Text(
                 text = date,
-                fontSize = 18.sp,
+                fontSize = 19.sp,
                 color = Color.Black
             )
         }
