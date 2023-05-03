@@ -5,6 +5,8 @@ import android.app.Application
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import com.abhay.weather.data.remote.WeatherApi
+import com.abhay.weather.data.repository.database.WeatherDataDao
+import com.abhay.weather.data.repository.database.WeatherDatabase
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -38,6 +40,13 @@ object AppModule {
     @Singleton
     fun provideFusedLocationProviderClient(app: Application): FusedLocationProviderClient {
         return LocationServices.getFusedLocationProviderClient(app)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideWeatherDataDao(app : Application): WeatherDataDao{
+        return WeatherDatabase.getInstance(app).weatherDataDao
     }
 
 }

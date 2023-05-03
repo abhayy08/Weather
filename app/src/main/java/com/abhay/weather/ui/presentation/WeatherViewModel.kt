@@ -5,9 +5,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.abhay.weather.data.mappers.toDays
+import com.abhay.weather.data.mappers.toWeatherInfo
+import com.abhay.weather.data.repository.database.Days
+import com.abhay.weather.data.repository.database.WeatherData
+import com.abhay.weather.data.repository.database.WeatherDataDao
 import com.abhay.weather.domain.location.LocationTracker
 import com.abhay.weather.domain.repository.WeatherRepository
 import com.abhay.weather.domain.util.Resource
+import com.abhay.weather.domain.weather.WeatherInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -16,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
     private val repository: WeatherRepository,
-    private val locationTracker: LocationTracker
+    private val locationTracker: LocationTracker,
+    private val dao: WeatherDataDao
 ) : ViewModel() {
 
     var state by mutableStateOf(WeatherState())
@@ -24,10 +31,18 @@ class WeatherViewModel @Inject constructor(
 
     fun loadWeatherInfo() {
         viewModelScope.launch {
+            val weatherDataList = dao.getWeatherDataWithDays()
+            val data: WeatherInfo?
+            if (weatherDataList.isNotEmpty()) {
+                data = dao.getWeatherDataWithDays()[0].toWeatherInfo()
+            } else data = null
+
             state = state.copy(
+                weatherInfo = data,
                 isLoading = true,
                 error = null
             )
+
             locationTracker.getCurrentLocation()?.let { location ->
                 val locationName = repository.getLocationName(location.latitude, location.longitude)
                 when (val result =
@@ -40,7 +55,18 @@ class WeatherViewModel @Inject constructor(
                             isLoading = false,
                             error = null
                         )
+                        val weatherData = WeatherData(
+                            id = 0,
+                            locationName = state.weatherInfo!!.locationName
+                        )
+                        dao.insertWeatherData(weatherData)
+
+                        result.data!!.weatherForecastDetails!!.forEachIndexed { index, day ->
+                            dao.insertDay(day.toDays(index + 1))
+                        }
+
                     }
+
                     is Resource.Error -> {
                         state = state.copy(
                             weatherInfo = null,

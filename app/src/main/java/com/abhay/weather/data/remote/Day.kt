@@ -15,8 +15,6 @@ data class Day(
     val sunrise: String,
     val sunset: String,
     val temp: Double,
-    val tempmax: Double,
-    val tempmin: Double,
     val uvindex: Int,
     val visibility: Double,
     val windspeed: Double
