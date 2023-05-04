@@ -2,14 +2,7 @@ package com.abhay.weather.ui.presentation
 
 import android.annotation.SuppressLint
 import androidx.annotation.RawRes
-import androidx.compose.foundation.OverscrollEffect
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clipScrollableContainer
-import androidx.compose.foundation.gestures.FlingBehavior
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.ScrollableDefaults
-import androidx.compose.foundation.gestures.ScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,17 +19,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abhay.weather.R
@@ -45,15 +36,15 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun WeatherUi(
-    state: WeatherState,
+    viewModel: WeatherViewModel,
     color: Color,
     modifier: Modifier = Modifier
 ) {
-    state.weatherInfo?.currentWeatherData?.let { data ->
+    val state = viewModel.state.collectAsState()
+    state.value.weatherInfo?.currentWeatherData?.let { data ->
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -68,7 +59,7 @@ fun WeatherUi(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = state.weatherInfo.locationName,
+                    text = state.value.weatherInfo!!.locationName,
                     fontSize = 35.sp,
                     color = Color.Black
                 )
@@ -106,7 +97,7 @@ fun WeatherUi(
             }
             Temp(temp = data.temp)
             DailySummary(
-                state = state,
+                state = state.value,
             )
             Spacer(modifier = modifier.height(16.dp))
             WeatherInfoCard(
@@ -115,7 +106,7 @@ fun WeatherUi(
                 humidity = data.humidity.toInt(),
                 visibility = data.visibility.toDouble()
             )
-            WeatherForecast(state = state, color = color)
+            WeatherForecast(state = state.value, color = color)
         }
 
     }
@@ -129,7 +120,7 @@ fun DailySummary(
     val data = state.weatherInfo!!.currentWeatherData!!
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -141,7 +132,7 @@ fun DailySummary(
             color = Color.Black,
             fontSize = 20.sp
         )
-        Spacer(modifier = Modifier.height(3.dp))
+        Spacer(modifier = modifier.height(3.dp))
         Text(
             text = data.currentWeatherSummary,
             style = MaterialTheme.typography.labelSmall,

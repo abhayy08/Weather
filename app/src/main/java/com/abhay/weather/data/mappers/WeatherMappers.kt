@@ -37,7 +37,7 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
     val visibility = currentConditions.visibility
     val listOfDays = days
 
-    val date = days[0].datetime
+    val date = LocalDate.now().toString()
     val formattedDate =
         LocalDate.parse(date).format(DateTimeFormatter.ofPattern("E, d MMM", Locale.ENGLISH))
 
@@ -46,7 +46,7 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
         weatherDesc = weatherDesc,
         temp = temp,
         feelsLike = feelsLike,
-        pressure = pressure.toInt(),
+        pressure = pressure,
         humidity = humidity,
         windSpeed = windSpeed,
         sunrise = sunrise,
@@ -67,7 +67,7 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
 fun WeatherDataWithDays.toWeatherInfo(): WeatherInfo {
     val locationName = weatherData.locationName
     val daysList = days
-    val date = days[0].datetime
+    val date = LocalDate.now().toString()
     val formattedDate =
         LocalDate.parse(date).format(DateTimeFormatter.ofPattern("E, d MMM", Locale.ENGLISH))
     val currentWeatherDetails = CurrentWeatherDetails(
@@ -77,8 +77,8 @@ fun WeatherDataWithDays.toWeatherInfo(): WeatherInfo {
         tempMax = days[0].feelslikemax,
         tempMin = days[0].feelslikemin,
         feelsLike = weatherData.feelsLike,
-        visibility = weatherData.visibility.toInt(),
-        pressure = weatherData.pressure.toInt(),
+        visibility = weatherData.visibility,
+        pressure = weatherData.pressure,
         humidity = weatherData.humidity,
         windSpeed = weatherData.windSpeed,
         sunrise = weatherData.sunrise,

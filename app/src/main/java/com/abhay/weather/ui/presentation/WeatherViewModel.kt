@@ -17,6 +17,9 @@ import com.abhay.weather.domain.weather.WeatherInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,8 +30,8 @@ class WeatherViewModel @Inject constructor(
     private val dao: WeatherDataDao
 ) : ViewModel() {
 
-    var state by mutableStateOf(WeatherState())
-        private set
+    private val _state = MutableStateFlow(WeatherState())
+    val state : StateFlow<WeatherState> = _state
 
     fun loadWeatherInfo() {
         viewModelScope.launch {
@@ -37,38 +40,42 @@ class WeatherViewModel @Inject constructor(
                 dao.getWeatherDataWithDays()[0].toWeatherInfo()
             } else null
 
-            state = state.copy(
-                weatherInfo = data,
-                isLoading = data == null,
-                error = null
-            )
+           _state.update {
+               it.copy(
+               weatherInfo = data,
+               isLoading = data == null,
+               error = null
+           )
+           }
 
             locationTracker.getCurrentLocation()?.let { location ->
                 val locationName = repository.getLocationName(location.latitude, location.longitude)
                 when (val result =
                     repository.getWeatherData(location.latitude, location.longitude)) {
                     is Resource.Success -> {
-                        state = state.copy(
-                            weatherInfo = result.data.also {
-                                it?.locationName = locationName
-                            },
-                            isLoading = false,
-                            error = null
-                        )
+                        _state.update { it ->
+                            it.copy(
+                                weatherInfo = result.data.also {
+                                    it!!.locationName = locationName
+                                },
+                                isLoading = false,
+                                error = null
+                            )
+                        }
                         val weatherData = WeatherData(
                             id = 0,
-                            locationName = state.weatherInfo!!.locationName,
-                            temp = state.weatherInfo!!.currentWeatherData!!.temp,
-                            tempMax =state.weatherInfo!!.currentWeatherData!!.tempMax,
-                            tempMin =state.weatherInfo!!.currentWeatherData!!.tempMin,
-                            feelsLike =state.weatherInfo!!.currentWeatherData!!.temp,
-                            visibility =state.weatherInfo!!.currentWeatherData!!.visibility,
-                            pressure =state.weatherInfo!!.currentWeatherData!!.pressure,
-                            humidity =state.weatherInfo!!.currentWeatherData!!.humidity,
-                            windSpeed =state.weatherInfo!!.currentWeatherData!!.windSpeed,
-                            sunrise =state.weatherInfo!!.currentWeatherData!!.sunrise,
-                            sunset =state.weatherInfo!!.currentWeatherData!!.sunset,
-                            currentWeatherSummary =state.weatherInfo!!.currentWeatherData!!.currentWeatherSummary
+                            locationName = state.value.weatherInfo?.locationName?: "",
+                            temp = state.value.weatherInfo!!.currentWeatherData!!.temp,
+                            tempMax =state.value.weatherInfo!!.currentWeatherData!!.tempMax,
+                            tempMin =state.value.weatherInfo!!.currentWeatherData!!.tempMin,
+                            feelsLike =state.value.weatherInfo!!.currentWeatherData!!.temp,
+                            visibility =state.value.weatherInfo!!.currentWeatherData!!.visibility,
+                            pressure =state.value.weatherInfo!!.currentWeatherData!!.pressure,
+                            humidity =state.value.weatherInfo!!.currentWeatherData!!.humidity,
+                            windSpeed =state.value.weatherInfo!!.currentWeatherData!!.windSpeed,
+                            sunrise =state.value.weatherInfo!!.currentWeatherData!!.sunrise,
+                            sunset =state.value.weatherInfo!!.currentWeatherData!!.sunset,
+                            currentWeatherSummary =state.value.weatherInfo!!.currentWeatherData!!.currentWeatherSummary
                         )
                         dao.insertWeatherData(weatherData)
 
@@ -79,18 +86,22 @@ class WeatherViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        state = state.copy(
-                            weatherInfo = null,
-                            isLoading = false,
-                            error = result.message
-                        )
+                        _state.update {
+                            it.copy(
+                                weatherInfo = null,
+                                isLoading = false,
+                                error = result.message
+                            )
+                        }
                     }
                 }
             } ?: kotlin.run {
-                state = state.copy(
-                    isLoading = false,
-                    error = "Make Sure you have granted location permission and turned on your location"
-                )
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        error = "Make Sure you have granted location permission and turned on your location"
+                    )
+                }
             }
         }
     }
