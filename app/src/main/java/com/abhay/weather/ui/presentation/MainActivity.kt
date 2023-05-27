@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.abhay.weather.ui.theme.WeatherTheme
 import com.abhay.weather.ui.theme.grayish
 import com.abhay.weather.ui.theme.sec
@@ -57,9 +58,10 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf(Color.Gray)
             }
             WeatherTheme(color) {
-                Box(
+                Scaffold(
                     modifier = Modifier
-                        .fillMaxSize().background(sec)
+                        .fillMaxSize()
+                        .background(sec)
                 ) {
                     WeatherUi2(
                         viewModel = viewModel,

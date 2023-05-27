@@ -2,12 +2,11 @@ package com.abhay.weather.data.location
 
 import android.Manifest
 import android.app.Application
-import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationManager
 import android.util.Log
 import androidx.core.content.ContextCompat
+import com.abhay.weather.domain.connectivitycheckers.NetworkConnectivityChecker
 import com.abhay.weather.domain.location.LocationTracker
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -21,7 +20,8 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class DefaultLocationTracker @Inject constructor(
     private val locationClient: FusedLocationProviderClient,
-    private val application: Application
+    private val application: Application,
+    private val connectivityChecker: NetworkConnectivityChecker
 ) : LocationTracker {
 
     override suspend fun getCurrentLocation(): Location? {
@@ -34,9 +34,8 @@ class DefaultLocationTracker @Inject constructor(
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
-        val locationManager = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+
+        val isGpsEnabled = connectivityChecker.isGpsEnabled()
 
         if (!hasAccessFineLocationPermission || !hasAccessCoarseLocationPermission || !isGpsEnabled) {
             return null

@@ -1,23 +1,17 @@
 package com.abhay.weather.ui.presentation
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.abhay.weather.data.mappers.toDays
 import com.abhay.weather.data.mappers.toWeatherInfo
-import com.abhay.weather.data.repository.database.Days
 import com.abhay.weather.data.repository.database.WeatherData
 import com.abhay.weather.data.repository.database.WeatherDataDao
+import com.abhay.weather.domain.connectivitycheckers.NetworkConnectivityChecker
 import com.abhay.weather.domain.location.LocationTracker
 import com.abhay.weather.domain.repository.WeatherRepository
 import com.abhay.weather.domain.util.Resource
 import com.abhay.weather.domain.weather.WeatherInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -28,7 +22,8 @@ import javax.inject.Inject
 class WeatherViewModel @Inject constructor(
     private val repository: WeatherRepository,
     private val locationTracker: LocationTracker,
-    private val dao: WeatherDataDao
+    private val dao: WeatherDataDao,
+    private val connectivity: NetworkConnectivityChecker
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(WeatherState())
@@ -48,6 +43,8 @@ class WeatherViewModel @Inject constructor(
                     error = null
                 )
             }
+
+
 
             locationTracker.getCurrentLocation()?.let { location ->
                 val locationName = repository.getLocationName(location.latitude, location.longitude)
@@ -91,7 +88,7 @@ class WeatherViewModel @Inject constructor(
                     is Resource.Error -> {
                         _state.update {
                             it.copy(
-                                weatherInfo = null,
+                                weatherInfo = data,
                                 isLoading = false,
                                 error = result.message
                             )
@@ -107,5 +104,9 @@ class WeatherViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun isWifiOn(): Boolean {
+        return connectivity.isOnline()
     }
 }

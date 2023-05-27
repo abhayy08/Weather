@@ -1,6 +1,8 @@
 package com.abhay.weather.di
 
+import com.abhay.weather.data.connectivitycheckers.NetworkConnectivity
 import com.abhay.weather.data.location.DefaultLocationTracker
+import com.abhay.weather.domain.connectivitycheckers.NetworkConnectivityChecker
 import com.abhay.weather.domain.location.LocationTracker
 import dagger.Binds
 import dagger.Module
@@ -18,4 +20,8 @@ abstract class LocationModule {
     @Binds
     @Singleton
     abstract fun bindLocationTracker(defaultLocationTracker: DefaultLocationTracker): LocationTracker
+
+    @Binds
+    @Singleton
+    abstract fun bindConnectivityChecker(defaultLocationTracker: NetworkConnectivity): NetworkConnectivityChecker
 }

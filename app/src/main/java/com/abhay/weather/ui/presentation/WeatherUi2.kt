@@ -1,12 +1,19 @@
 package com.abhay.weather.ui.presentation
 
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.view.HapticFeedbackConstants
+import android.widget.Toast
 import androidx.annotation.RawRes
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,7 +51,10 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,6 +66,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import kotlin.math.roundToInt
 
+
 @Composable
 fun WeatherUi2(
     viewModel: WeatherViewModel,
@@ -65,9 +76,9 @@ fun WeatherUi2(
     var isExpanded by remember {
         mutableStateOf(false)
     }
-    val screenHeight = LocalConfiguration.current.screenHeightDp
-    val upperHeight = screenHeight / 2
     val state = viewModel.state.collectAsState()
+    val context = LocalContext.current
+    val vibrator = context.getSystemService(Vibrator::class.java) as Vibrator
 
     state.value.weatherInfo?.currentWeatherData?.let { data ->
         Column {
@@ -78,23 +89,31 @@ fun WeatherUi2(
                         color = color,
                         shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
                     )
+                    .animateContentSize(
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioLowBouncy,
+                            stiffness = Spring.StiffnessMediumLow
+                        )
+                    )
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = {
+                            vibrator.cancel()
+                            vibrator.vibrate(VibrationEffect.createOneShot(70,VibrationEffect.DEFAULT_AMPLITUDE))
+                            isExpanded = !isExpanded
+                        }
+                    )
             ) {
                 Column(
                     modifier = modifier
                         .padding(20.dp, 30.dp)
-                        .fillMaxWidth()
-                        .animateContentSize(
-                            animationSpec = spring(
-                                dampingRatio = Spring.DampingRatioLowBouncy,
-                                stiffness = Spring.StiffnessMediumLow
-                            )
-                        )
-                        .clickable { isExpanded = !isExpanded },
+                        .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Spacer(modifier = modifier.height(15.dp))
                     Text(
-                        text = state.value.weatherInfo!!.locationName,
+                        text = "-${ state.value.weatherInfo!!.locationName }-",
                         color = Color.Black,
                         fontSize = 35.sp
                     )
@@ -145,7 +164,7 @@ fun WeatherUi2(
             Card(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(20.dp,10.dp),
+                    .padding(20.dp, 10.dp),
                 colors = CardDefaults.cardColors(Color.DarkGray)
             ) {
                 DailySummary(state = state.value)
@@ -153,11 +172,25 @@ fun WeatherUi2(
             Card(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(20.dp,10.dp),
+                    .padding(20.dp, 10.dp),
                 colors = CardDefaults.cardColors(Color.DarkGray)
             ) {
                 WeatherForecast(state = state.value, color = Color.DarkGray)
             }
+        }
+    } ?: run {
+        if(viewModel.isWifiOn()) {
+            Toast.makeText(
+                context,
+                "Turn on the Location Service to get current weather details",
+                Toast.LENGTH_SHORT
+            ).show()
+        }else{
+            Toast.makeText(
+                context,
+                "Turn on mobile data or connect to wifi",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }
@@ -183,7 +216,10 @@ fun DailySummary(
             color = Color.LightGray,
             fontSize = 20.sp
         )
-        Divider(modifier = modifier.fillMaxWidth().padding(0.dp, 10.dp).align(Alignment.CenterHorizontally), thickness = 2.dp, color = Color.Gray)
+        Divider(modifier = modifier
+            .fillMaxWidth()
+            .padding(0.dp, 10.dp)
+            .align(Alignment.CenterHorizontally), thickness = 2.dp, color = Color.Gray)
         Text(
             text = data.currentWeatherSummary,
             style = MaterialTheme.typography.labelSmall,

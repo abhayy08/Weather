@@ -56,11 +56,6 @@ fun WeatherForecast(
                     fontSize = 20.sp,
                     color = Color.LightGray
                 )
-                Text(
-                    text = "--->    ",
-                    fontSize = 20.sp,
-                    color = Color.LightGray
-                )
             }
             Divider(modifier = modifier.fillMaxWidth().padding(0.dp, 10.dp), thickness = 2.dp, color = Color.Gray)
             LazyRow(
