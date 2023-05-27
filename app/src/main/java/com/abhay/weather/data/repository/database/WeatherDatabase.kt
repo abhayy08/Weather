@@ -10,7 +10,7 @@ import androidx.room.RoomDatabase
         WeatherData::class,
         Days::class
     ],
-    version = 1
+    version = 2
 )
 abstract class WeatherDatabase: RoomDatabase() {
     abstract val weatherDataDao: WeatherDataDao
@@ -26,7 +26,9 @@ abstract class WeatherDatabase: RoomDatabase() {
                     context.applicationContext,
                     WeatherDatabase::class.java,
                     "WeatherDb"
-                ).build().also {
+                ).fallbackToDestructiveMigration()
+                    .build()
+                    .also {
                     INSTANCE = it
                 }
             }
