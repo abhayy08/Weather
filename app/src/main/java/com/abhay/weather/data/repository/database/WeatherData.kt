@@ -19,4 +19,5 @@ data class WeatherData(
     val sunrise: String,
     val sunset: String,
     val currentWeatherSummary: String,
+    val weatherDesc: String
 )

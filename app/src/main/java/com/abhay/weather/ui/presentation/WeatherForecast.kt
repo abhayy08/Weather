@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,42 +39,45 @@ fun WeatherForecast(
     color: Color = blue
 ) {
     state.weatherInfo?.weatherForecastDetails?.let { data ->
+
         Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(10.dp)
+            modifier = modifier.padding(25.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Row(
                 modifier = modifier
-                    .fillMaxWidth()
-                    .padding(5.dp),
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = "Weekly Forecast",
                     fontSize = 20.sp,
-                    color = Color.Black
+                    color = Color.LightGray
                 )
                 Text(
-                    text = "---->    ",
+                    text = "--->    ",
                     fontSize = 20.sp,
-                    color = Color.Black
+                    color = Color.LightGray
                 )
             }
-            LazyRow(content = {
+            Divider(modifier = modifier.fillMaxWidth().padding(0.dp, 10.dp), thickness = 2.dp, color = Color.Gray)
+            LazyRow(
+                content = {
                 items(data) { data ->
                     InfoCard1(
                         data = data,
                         date = LocalDate.parse(data.datetime)
                             .format(DateTimeFormatter.ofPattern("dd MMM", Locale.ENGLISH)),
-                        color = color
+                        color = Color.Gray
                     )
 
                 }
             })
-
         }
+
+
     }
 }
 
@@ -85,13 +90,8 @@ fun InfoCard1(
 ) {
     Card(
         modifier = modifier
-            .padding(4.dp)
-            .fillMaxWidth()
-            .border(
-                width = 3.dp,
-                color = Color.Black,
-                shape = RoundedCornerShape(12.dp)
-            ),
+            .padding(4.dp, 5.dp)
+            .fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(color),
     ) {
@@ -102,8 +102,8 @@ fun InfoCard1(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
-                modifier = modifier.padding(25.dp,5.dp,0.dp,0.dp)
-            ){
+                modifier = modifier.padding(25.dp, 5.dp, 0.dp, 0.dp)
+            ) {
                 Text(
                     text = "${data.feelslikemax.toInt()}°",
                     fontSize = 25.sp,
@@ -117,10 +117,12 @@ fun InfoCard1(
                     text = "/",
                     fontSize = 35.sp,
                     color = Color.Black,
-                    modifier = Modifier.offset(
-                        x = (2).dp,
-                        y = (-4).dp
-                    ).rotate(10f)
+                    modifier = Modifier
+                        .offset(
+                            x = (2).dp,
+                            y = (-4).dp
+                        )
+                        .rotate(10f)
                 )
                 Text(
                     text = "${data.feelslikemin.toInt()}°",
@@ -132,7 +134,7 @@ fun InfoCard1(
                     )
                 )
             }
-            Spacer(modifier = modifier.height(15.dp))
+            Spacer(modifier = modifier.height(20.dp))
             Text(
                 text = date,
                 fontSize = 19.sp,

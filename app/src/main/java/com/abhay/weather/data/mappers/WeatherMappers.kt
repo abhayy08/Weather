@@ -23,7 +23,8 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
         formatted == hour.datetime
     }
     val temp = currentConditions.temp
-    val weatherDesc = currentHour!!.conditions
+    val weatherDesc = currentConditions.conditions
+//    val weatherDesc = currentHour!!.conditions
     val feelsLike = currentConditions.feelslike
     val pressure = currentConditions.pressure
     val humidity = currentConditions.humidity
@@ -72,7 +73,7 @@ fun WeatherDataWithDays.toWeatherInfo(): WeatherInfo {
         LocalDate.parse(date).format(DateTimeFormatter.ofPattern("E, d MMM", Locale.ENGLISH))
     val currentWeatherDetails = CurrentWeatherDetails(
         dateAndDay = formattedDate,
-        weatherDesc = days[0].conditions,
+        weatherDesc = weatherData.weatherDesc,
         temp = weatherData.temp,
         tempMax = days[0].feelslikemax,
         tempMin = days[0].feelslikemin,

@@ -52,7 +52,7 @@ class WeatherRepositoryImpl @Inject constructor(
                     override fun onGeocode(results: MutableList<Address>) {
                         if (results.isNotEmpty()) {
                             val address = results[0]
-                            val city = address.subLocality
+                            val city = address.locality
                             cont.resume(city)
                         } else {
                             cont.resume("")

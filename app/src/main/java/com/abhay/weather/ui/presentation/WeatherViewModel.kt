@@ -15,6 +15,7 @@ import com.abhay.weather.domain.repository.WeatherRepository
 import com.abhay.weather.domain.util.Resource
 import com.abhay.weather.domain.weather.WeatherInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +32,7 @@ class WeatherViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(WeatherState())
-    val state : StateFlow<WeatherState> = _state
+    val state: StateFlow<WeatherState> = _state
 
     fun loadWeatherInfo() {
         viewModelScope.launch {
@@ -40,13 +41,13 @@ class WeatherViewModel @Inject constructor(
                 dao.getWeatherDataWithDays()[0].toWeatherInfo()
             } else null
 
-           _state.update {
-               it.copy(
-               weatherInfo = data,
-               isLoading = data == null,
-               error = null
-           )
-           }
+            _state.update {
+                it.copy(
+                    weatherInfo = data,
+                    isLoading = data == null,
+                    error = null
+                )
+            }
 
             locationTracker.getCurrentLocation()?.let { location ->
                 val locationName = repository.getLocationName(location.latitude, location.longitude)
@@ -64,24 +65,26 @@ class WeatherViewModel @Inject constructor(
                         }
                         val weatherData = WeatherData(
                             id = 0,
-                            locationName = state.value.weatherInfo?.locationName?: "",
+                            locationName = state.value.weatherInfo?.locationName ?: "",
                             temp = state.value.weatherInfo!!.currentWeatherData!!.temp,
-                            tempMax =state.value.weatherInfo!!.currentWeatherData!!.tempMax,
-                            tempMin =state.value.weatherInfo!!.currentWeatherData!!.tempMin,
-                            feelsLike =state.value.weatherInfo!!.currentWeatherData!!.temp,
-                            visibility =state.value.weatherInfo!!.currentWeatherData!!.visibility,
-                            pressure =state.value.weatherInfo!!.currentWeatherData!!.pressure,
-                            humidity =state.value.weatherInfo!!.currentWeatherData!!.humidity,
-                            windSpeed =state.value.weatherInfo!!.currentWeatherData!!.windSpeed,
-                            sunrise =state.value.weatherInfo!!.currentWeatherData!!.sunrise,
-                            sunset =state.value.weatherInfo!!.currentWeatherData!!.sunset,
-                            currentWeatherSummary =state.value.weatherInfo!!.currentWeatherData!!.currentWeatherSummary
+                            tempMax = state.value.weatherInfo!!.currentWeatherData!!.tempMax,
+                            tempMin = state.value.weatherInfo!!.currentWeatherData!!.tempMin,
+                            feelsLike = state.value.weatherInfo!!.currentWeatherData!!.feelsLike,
+                            visibility = state.value.weatherInfo!!.currentWeatherData!!.visibility,
+                            pressure = state.value.weatherInfo!!.currentWeatherData!!.pressure,
+                            humidity = state.value.weatherInfo!!.currentWeatherData!!.humidity,
+                            windSpeed = state.value.weatherInfo!!.currentWeatherData!!.windSpeed,
+                            sunrise = state.value.weatherInfo!!.currentWeatherData!!.sunrise,
+                            sunset = state.value.weatherInfo!!.currentWeatherData!!.sunset,
+                            currentWeatherSummary = state.value.weatherInfo!!.currentWeatherData!!.currentWeatherSummary,
+                            weatherDesc = state.value.weatherInfo!!.currentWeatherData!!.weatherDesc
                         )
                         dao.insertWeatherData(weatherData)
 
                         result.data!!.weatherForecastDetails!!.forEachIndexed { index, day ->
                             dao.insertDay(day.toDays(index + 1))
                         }
+
 
                     }
 
