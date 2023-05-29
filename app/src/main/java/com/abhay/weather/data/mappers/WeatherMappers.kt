@@ -19,7 +19,7 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
         val now = LocalTime.now()
         val nearestHour = now.truncatedTo(ChronoUnit.HOURS)
         val formatted = nearestHour.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
-        formatted == hour.datetime
+        formatted == hour!!.datetime
     }
     val temp = currentConditions.temp
     val weatherDesc = currentConditions.conditions

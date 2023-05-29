@@ -34,8 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.abhay.weather.ui.theme.WeatherTheme
-import com.abhay.weather.ui.theme.grayish
-import com.abhay.weather.ui.theme.sec
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -72,18 +70,14 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            val color by remember {
-                mutableStateOf(Color.Gray)
-            }
             val state = viewModel.state.collectAsState()
             val swipeRefreshState =
                 rememberSwipeRefreshState(isRefreshing = state.value.isRefreshing)
 
-            WeatherTheme(color) {
+            WeatherTheme(Color.Gray) {
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.Blue)
                 ) {
                     SwipeRefresh(
                         state = swipeRefreshState,
@@ -109,7 +103,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 WeatherUi2(
                                     viewModel = viewModel,
-                                    color = color
+                                    color = Color.Gray
                                 )
                             }
                             if (state.value.isLoading) {

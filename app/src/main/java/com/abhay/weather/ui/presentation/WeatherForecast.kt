@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abhay.weather.data.remote.Day
-import com.abhay.weather.ui.theme.blue
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -36,7 +35,7 @@ import java.util.Locale
 fun WeatherForecast(
     state: WeatherState,
     modifier: Modifier = Modifier,
-    color: Color = blue
+    color: Color = Color.DarkGray
 ) {
     state.weatherInfo?.weatherForecastDetails?.let { data ->
 
@@ -81,7 +80,7 @@ fun InfoCard1(
     modifier: Modifier = Modifier,
     data: Day,
     date: String,
-    color: Color = blue
+    color: Color = Color.DarkGray
 ) {
     Card(
         modifier = modifier

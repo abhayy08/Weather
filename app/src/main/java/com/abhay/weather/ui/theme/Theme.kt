@@ -19,13 +19,13 @@ import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val UiColorScheme = darkColorScheme(
-    primary = blue,
+    primary = Color.White,
 )
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun WeatherTheme(
-    color: Color = Color.White,
+    color: Color = Color.Gray,
     darkTheme: Boolean = true,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
@@ -35,7 +35,7 @@ fun WeatherTheme(
     val systemUiController = rememberSystemUiController()
     SideEffect {
         systemUiController.setSystemBarsColor(
-            color = Color.Black,
+            color = sec,
             darkIcons = true,
         )
         val window = (view.context as Activity).window
