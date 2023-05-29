@@ -81,117 +81,108 @@ fun WeatherUi2(
     val vibrator = context.getSystemService(Vibrator::class.java) as Vibrator
 
     state.value.weatherInfo?.currentWeatherData?.let { data ->
-        Column {
+
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .background(
+                    color = color,
+                    shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
+                )
+                .animateContentSize(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioLowBouncy,
+                        stiffness = Spring.StiffnessMediumLow
+                    )
+                )
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = {
+                        vibrator.cancel()
+                        vibrator.vibrate(
+                            VibrationEffect.createOneShot(
+                                70,
+                                VibrationEffect.DEFAULT_AMPLITUDE
+                            )
+                        )
+                        isExpanded = !isExpanded
+                    }
+                )
+        ) {
             Column(
                 modifier = modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = color,
-                        shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
-                    )
-                    .animateContentSize(
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioLowBouncy,
-                            stiffness = Spring.StiffnessMediumLow
-                        )
-                    )
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = {
-                            vibrator.cancel()
-                            vibrator.vibrate(VibrationEffect.createOneShot(70,VibrationEffect.DEFAULT_AMPLITUDE))
-                            isExpanded = !isExpanded
-                        }
-                    )
+                    .padding(20.dp, 30.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
-                    modifier = modifier
-                        .padding(20.dp, 30.dp)
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Spacer(modifier = modifier.height(15.dp))
+                Text(
+                    text = "-${state.value.weatherInfo!!.locationName}-",
+                    color = Color.Black,
+                    fontSize = 35.sp
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Spacer(modifier = modifier.height(15.dp))
                     Text(
-                        text = "-${ state.value.weatherInfo!!.locationName }-",
-                        color = Color.Black,
-                        fontSize = 35.sp
+                        text = "${data.temp.roundToInt()}",
+                        fontSize = 80.sp,
+                        color = Color.Black
                     )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "${data.temp.roundToInt()}",
-                            fontSize = 80.sp,
-                            color = Color.Black
-                        )
-                        Text(
-                            text = "°C",
-                            modifier = modifier.offset(y = (-15).dp),
-                            fontSize = 35.sp,
-                            color = Color.Black
-                        )
-                    }
                     Text(
-                        text = data.weatherDesc,
-                        color = Color.DarkGray,
-                        fontSize = 20.sp
+                        text = "°C",
+                        modifier = modifier.offset(y = (-15).dp),
+                        fontSize = 35.sp,
+                        color = Color.Black
                     )
-                    Spacer(modifier = modifier.height(20.dp))
-                    Text(
-                        text = "MaxTemp: ${data.tempMax}  |  MinTemp: ${data.tempMin}",
-                        color = Color.Black,
-                        fontSize = 20.sp
-                    )
-                    if (isExpanded) {
-                        Spacer(modifier = modifier.height(15.dp))
-                        Divider(
-                            thickness = 2.dp,
-                            color = Color.DarkGray,
-                            modifier = modifier.width(50.dp)
-                        )
-                        WeatherInfoCard(
-                            windSpeed = data.windSpeed.toInt(),
-                            humidity = data.humidity.toInt(),
-                            feelsLike = data.feelsLike
-                        )
-                    }
                 }
+                Text(
+                    text = data.weatherDesc,
+                    color = Color.DarkGray,
+                    fontSize = 20.sp
+                )
+                Spacer(modifier = modifier.height(20.dp))
+                Text(
+                    text = "MaxTemp: ${data.tempMax}  |  MinTemp: ${data.tempMin}",
+                    color = Color.Black,
+                    fontSize = 20.sp
+                )
+                if (isExpanded) {
+                    Spacer(modifier = modifier.height(15.dp))
+                    Divider(
+                        thickness = 2.dp,
+                        color = Color.DarkGray,
+                        modifier = modifier.width(50.dp)
+                    )
+                    WeatherInfoCard(
+                        windSpeed = data.windSpeed.toInt(),
+                        humidity = data.humidity.toInt(),
+                        feelsLike = data.feelsLike
+                    )
+                }
+            }
 
-            }
-            Spacer(modifier = modifier.height(15.dp))
-            Card(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(20.dp, 10.dp),
-                colors = CardDefaults.cardColors(Color.DarkGray)
-            ) {
-                DailySummary(state = state.value)
-            }
-            Card(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(20.dp, 10.dp),
-                colors = CardDefaults.cardColors(Color.DarkGray)
-            ) {
-                WeatherForecast(state = state.value, color = Color.DarkGray)
-            }
         }
-    } ?: run {
-        if(viewModel.isWifiOn()) {
-            Toast.makeText(
-                context,
-                "Turn on the Location Service to get current weather details",
-                Toast.LENGTH_SHORT
-            ).show()
-        }else{
-            Toast.makeText(
-                context,
-                "Turn on mobile data or connect to wifi",
-                Toast.LENGTH_SHORT
-            ).show()
+        Spacer(modifier = modifier.height(15.dp))
+        Card(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(20.dp, 10.dp),
+            colors = CardDefaults.cardColors(Color.DarkGray)
+        ) {
+            DailySummary(state = state.value)
         }
+        Card(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(20.dp, 10.dp),
+            colors = CardDefaults.cardColors(Color.DarkGray)
+        ) {
+            WeatherForecast(state = state.value, color = Color.DarkGray)
+        }
+
     }
 }
 
@@ -216,10 +207,12 @@ fun DailySummary(
             color = Color.LightGray,
             fontSize = 20.sp
         )
-        Divider(modifier = modifier
-            .fillMaxWidth()
-            .padding(0.dp, 10.dp)
-            .align(Alignment.CenterHorizontally), thickness = 2.dp, color = Color.Gray)
+        Divider(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(0.dp, 10.dp)
+                .align(Alignment.CenterHorizontally), thickness = 2.dp, color = Color.Gray
+        )
         Text(
             text = data.currentWeatherSummary,
             style = MaterialTheme.typography.labelSmall,

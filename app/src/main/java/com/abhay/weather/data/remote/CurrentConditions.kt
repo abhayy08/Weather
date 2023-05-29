@@ -1,7 +1,6 @@
 package com.abhay.weather.data.remote
 
 data class CurrentConditions(
-    val cloudcover: Int,
     val conditions: String,
     val datetime: String,
     val datetimeEpoch: Int,
@@ -13,7 +12,7 @@ data class CurrentConditions(
     val precip: Double,
     val precipprob: Int,
     val preciptype: Any,
-    val pressure: Int,
+    val pressure: Double,
     val snow: Int,
     val snowdepth: Int,
     val source: String,
@@ -24,7 +23,7 @@ data class CurrentConditions(
     val sunsetEpoch: Int,
     val temp: Double,
     val uvindex: Int,
-    val visibility: Int,
+    val visibility: Double,
     val winddir: Int,
     val windgust: Any,
     val windspeed: Double

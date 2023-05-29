@@ -14,7 +14,6 @@ import java.util.Locale
 
 
 fun WeatherDto2.toWeatherInfo(): WeatherInfo {
-    //val weatherDec = currentConditions.conditions
 
     val currentHour = days[0].hours.find { hour ->
         val now = LocalTime.now()
@@ -24,7 +23,6 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
     }
     val temp = currentConditions.temp
     val weatherDesc = currentConditions.conditions
-//    val weatherDesc = currentHour!!.conditions
     val feelsLike = currentConditions.feelslike
     val pressure = currentConditions.pressure
     val humidity = currentConditions.humidity

@@ -12,7 +12,7 @@
         <item name="windowSplashScreenBackground">#202020</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/outline_cloud_241</item>
         <item name="postSplashScreenTheme">@style/Theme.Weather</item>
-
+        
     </style>
 
 

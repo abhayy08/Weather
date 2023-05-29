@@ -37,7 +37,7 @@ class DefaultLocationTracker @Inject constructor(
 
         val isGpsEnabled = connectivityChecker.isGpsEnabled()
 
-        if (!hasAccessFineLocationPermission || !hasAccessCoarseLocationPermission || !isGpsEnabled) {
+        if (!hasAccessCoarseLocationPermission || !isGpsEnabled) {
             return null
         }
 

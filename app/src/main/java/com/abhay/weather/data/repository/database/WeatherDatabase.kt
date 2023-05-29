@@ -10,7 +10,7 @@ import androidx.room.RoomDatabase
         WeatherData::class,
         Days::class
     ],
-    version = 3
+    version = 5
 )
 abstract class WeatherDatabase: RoomDatabase() {
     abstract val weatherDataDao: WeatherDataDao
