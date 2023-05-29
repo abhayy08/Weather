@@ -26,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +36,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.abhay.weather.ui.theme.WeatherTheme
 import com.abhay.weather.ui.theme.grayish
 import com.abhay.weather.ui.theme.sec
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
@@ -71,45 +75,63 @@ class MainActivity : ComponentActivity() {
             val color by remember {
                 mutableStateOf(Color.Gray)
             }
+            val state = viewModel.state.collectAsState()
+            val swipeRefreshState =
+                rememberSwipeRefreshState(isRefreshing = state.value.isRefreshing)
+
             WeatherTheme(color) {
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(sec)
+                        .background(Color.Blue)
                 ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize()
+                    SwipeRefresh(
+                        state = swipeRefreshState,
+                        onRefresh = viewModel::refresh,
+                        indicator = { state, refreshTrigger ->
+                            SwipeRefreshIndicator(
+                                state = state,
+                                refreshTriggerDistance = refreshTrigger,
+                                backgroundColor = Color.DarkGray,
+                                contentColor = Color.Gray,
+                                fade = true
+                            )
+                        }
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
+                        Box(
+                            modifier = Modifier.fillMaxSize()
                         ) {
-                            WeatherUi2(
-                                viewModel = viewModel,
-                                color = color
-                            )
-                        }
-                        val state = viewModel.state.collectAsState()
-                        if (state.value.isLoading) {
-                            CircularProgressIndicator(
-                                color = Color.Gray, strokeWidth = 5.dp,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                        state.value.error?.let { error ->
-                            if (viewModel.isWifiOn()) {
-                                Toast.makeText(
-                                    LocalContext.current,
-                                    error,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                Toast.makeText(
-                                    LocalContext.current,
-                                    "Turn on mobile data or connect to wifi",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                WeatherUi2(
+                                    viewModel = viewModel,
+                                    color = color
+                                )
+                            }
+                            if (state.value.isLoading) {
+                                CircularProgressIndicator(
+                                    color = Color.Gray, strokeWidth = 5.dp,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                            state.value.error?.let { error ->
+                                if (viewModel.isWifiOn()) {
+                                    Toast.makeText(
+                                        LocalContext.current,
+                                        error,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        LocalContext.current,
+                                        "Turn on mobile data or connect to wifi",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
                         }
                     }

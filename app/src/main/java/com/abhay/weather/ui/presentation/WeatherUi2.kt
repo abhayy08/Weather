@@ -168,7 +168,9 @@ fun WeatherUi2(
             WeatherForecast(state = state.value, color = Color.DarkGray)
         }
         Row(
-            modifier = modifier.padding(5.dp,10.dp).fillMaxWidth(),
+            modifier = modifier
+                .padding(5.dp, 10.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             DetailCard(
@@ -185,7 +187,9 @@ fun WeatherUi2(
             )
         }
         Row(
-            modifier = modifier.padding(5.dp,10.dp).fillMaxWidth(),
+            modifier = modifier
+                .padding(5.dp, 10.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             DetailCard(
@@ -221,10 +225,10 @@ fun DetailCard(
     ) {
         Column(
             modifier = modifier
-                .padding(20.dp),
+                .padding(20.dp, 20.dp),
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.Start,
-        ){
+        ) {
             Icon(painter = painterResource(id = res), contentDescription = null)
             Text(text = text, fontSize = 20.sp, color = Color.LightGray)
             Divider(
@@ -233,7 +237,7 @@ fun DetailCard(
                     .padding(0.dp, 10.dp)
                     .align(Alignment.CenterHorizontally), thickness = 2.dp, color = Color.Gray
             )
-            Text(text = "$value$unit", fontSize = 25.sp, color = Color.Gray)
+            Text(text = "$value$unit", fontSize = 20.sp, color = Color.Gray)
         }
     }
 }

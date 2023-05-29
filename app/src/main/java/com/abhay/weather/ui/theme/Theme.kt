@@ -25,36 +25,24 @@ private val UiColorScheme = darkColorScheme(
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun WeatherTheme(
-    color: Color = blue,
+    color: Color = Color.White,
     darkTheme: Boolean = true,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = UiColorScheme
-//        when {
-//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-//            val context = LocalContext.current
-//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-//        }
-//
-//        darkTheme -> DarkColorScheme
-//        else -> LightColorScheme
-//    }
     val view = LocalView.current
-//    if (!view.isInEditMode) {
-        val systemUiController = rememberSystemUiController()
-        SideEffect {
-            systemUiController.setSystemBarsColor(
-                color = Color.Black,
-                darkIcons = true,
-            )
-            val window = (view.context as Activity).window
-            window.statusBarColor = color.toArgb()
-            WindowCompat.getInsetsController(window, view)
-                .isAppearanceLightStatusBars = darkTheme
-        }
- //   }
-
+    val systemUiController = rememberSystemUiController()
+    SideEffect {
+        systemUiController.setSystemBarsColor(
+            color = Color.Black,
+            darkIcons = true,
+        )
+        val window = (view.context as Activity).window
+        window.statusBarColor = color.toArgb()
+        WindowCompat.getInsetsController(window, view)
+            .isAppearanceLightStatusBars = darkTheme
+    }
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
