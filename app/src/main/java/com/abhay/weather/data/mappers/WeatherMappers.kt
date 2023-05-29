@@ -19,7 +19,7 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
         val now = LocalTime.now()
         val nearestHour = now.truncatedTo(ChronoUnit.HOURS)
         val formatted = nearestHour.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
-        formatted == hour!!.datetime
+        formatted == hour.datetime
     }
     val temp = currentConditions.temp
     val weatherDesc = currentConditions.conditions
@@ -27,8 +27,7 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
     val pressure = currentConditions.pressure
     val humidity = currentConditions.humidity
     val windSpeed = currentConditions.windspeed
-    val sunrise = currentConditions.sunrise
-    val sunset = currentConditions.sunset
+
     val currentWeatherSummary = days[0].description
     val currentHourlyForecast = days[0].hours
     val tempMax = days[0].feelslikemax
@@ -37,6 +36,17 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
     val listOfDays = days
     val uvIndex = currentConditions.uvindex
     val precip = currentConditions.precipprob
+
+    val sunriseT = currentConditions.sunrise
+    val sunsetT = currentConditions.sunset
+
+    val sunrise = LocalTime
+        .parse(sunriseT, DateTimeFormatter.ofPattern("HH:mm:ss"))
+        .format(DateTimeFormatter.ofPattern("h:mm a"))
+
+    val sunset = LocalTime
+        .parse(sunsetT, DateTimeFormatter.ofPattern("HH:mm:ss"))
+        .format(DateTimeFormatter.ofPattern("h:mm a"))
 
     val date = LocalDate.now().toString()
     val formattedDate =
@@ -73,6 +83,8 @@ fun WeatherDataWithDays.toWeatherInfo(): WeatherInfo {
     val date = LocalDate.now().toString()
     val formattedDate =
         LocalDate.parse(date).format(DateTimeFormatter.ofPattern("E, d MMM", Locale.ENGLISH))
+
+
     val currentWeatherDetails = CurrentWeatherDetails(
         dateAndDay = formattedDate,
         weatherDesc = weatherData.weatherDesc,
