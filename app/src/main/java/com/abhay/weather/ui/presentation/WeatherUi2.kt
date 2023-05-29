@@ -1,25 +1,19 @@
 package com.abhay.weather.ui.presentation
 
-import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.view.HapticFeedbackConstants
-import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -27,15 +21,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -45,21 +37,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abhay.weather.R
-import com.abhay.weather.ui.theme.sec
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -81,7 +67,6 @@ fun WeatherUi2(
     val vibrator = context.getSystemService(Vibrator::class.java) as Vibrator
 
     state.value.weatherInfo?.currentWeatherData?.let { data ->
-
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -169,7 +154,7 @@ fun WeatherUi2(
         Card(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(20.dp, 10.dp),
+                .padding(15.dp, 10.dp),
             colors = CardDefaults.cardColors(Color.DarkGray)
         ) {
             DailySummary(state = state.value)
@@ -177,12 +162,79 @@ fun WeatherUi2(
         Card(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(20.dp, 10.dp),
+                .padding(15.dp, 10.dp),
             colors = CardDefaults.cardColors(Color.DarkGray)
         ) {
             WeatherForecast(state = state.value, color = Color.DarkGray)
         }
+        Row(
+            modifier = modifier.padding(5.dp,10.dp).fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            DetailCard(
+                res = R.drawable.sunny,
+                text = "UV Index",
+                value = data.uvIndex,
+                unit = ""
+            )
+            DetailCard(
+                res = R.drawable.eye,
+                text = "Visibility",
+                value = data.visibility.toInt(),
+                unit = " km"
+            )
+        }
+        Row(
+            modifier = modifier.padding(5.dp,10.dp).fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            DetailCard(
+                res = R.drawable.waves,
+                text = "Pressure",
+                value = data.pressure.toInt(),
+                unit = " Pa"
+            )
+            DetailCard(
+                res = R.drawable.precip,
+                text = "Precip Probability",
+                value = data.precipProb,
+                unit = " %"
+            )
+        }
+    }
+}
 
+@Composable
+fun DetailCard(
+    modifier: Modifier = Modifier,
+    @DrawableRes res: Int,
+    text: String,
+    value: Int,
+    unit: String
+) {
+    Card(
+        modifier = modifier
+            .padding(10.dp, 0.dp)
+            .wrapContentHeight()
+            .width(180.dp),
+        colors = CardDefaults.cardColors(Color.DarkGray)
+    ) {
+        Column(
+            modifier = modifier
+                .padding(20.dp),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.Start,
+        ){
+            Icon(painter = painterResource(id = res), contentDescription = null)
+            Text(text = text, fontSize = 20.sp, color = Color.LightGray)
+            Divider(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 10.dp)
+                    .align(Alignment.CenterHorizontally), thickness = 2.dp, color = Color.Gray
+            )
+            Text(text = "$value$unit", fontSize = 25.sp, color = Color.Gray)
+        }
     }
 }
 

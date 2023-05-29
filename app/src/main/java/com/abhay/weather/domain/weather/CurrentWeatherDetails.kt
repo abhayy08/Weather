@@ -14,5 +14,6 @@ data class CurrentWeatherDetails(
     val sunrise: String,
     val sunset: String,
     val currentWeatherSummary: String,
-
+    val uvIndex: Int,
+    val precipProb: Int
     )

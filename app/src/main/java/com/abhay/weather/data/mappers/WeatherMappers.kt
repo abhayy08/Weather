@@ -35,6 +35,8 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
     val tempMin = days[0].feelslikemin
     val visibility = currentConditions.visibility
     val listOfDays = days
+    val uvIndex = currentConditions.uvindex
+    val precip = currentConditions.precipprob
 
     val date = LocalDate.now().toString()
     val formattedDate =
@@ -53,7 +55,9 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
         currentWeatherSummary = currentWeatherSummary,
         tempMax = tempMax,
         tempMin = tempMin,
-        visibility = visibility
+        visibility = visibility,
+        uvIndex = uvIndex,
+        precipProb = precip
     )
     return WeatherInfo(
         currentWeatherData = currentWeather,
@@ -82,7 +86,10 @@ fun WeatherDataWithDays.toWeatherInfo(): WeatherInfo {
         windSpeed = weatherData.windSpeed,
         sunrise = weatherData.sunrise,
         sunset = weatherData.sunset,
-        currentWeatherSummary = days[0].description
+        currentWeatherSummary = days[0].description,
+        uvIndex = weatherData.uvIndex,
+        precipProb = weatherData.precipProb
+
     )
 
     return WeatherInfo(

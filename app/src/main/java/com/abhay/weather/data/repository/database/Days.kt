@@ -19,5 +19,5 @@ data class Days(
     val visibility: Double,
     val windspeed: Double,
     val sunrise: String,
-    val sunset: String,
+    val sunset: String
 )

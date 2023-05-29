@@ -74,7 +74,9 @@ class WeatherViewModel @Inject constructor(
                             sunrise = state.value.weatherInfo!!.currentWeatherData!!.sunrise,
                             sunset = state.value.weatherInfo!!.currentWeatherData!!.sunset,
                             currentWeatherSummary = state.value.weatherInfo!!.currentWeatherData!!.currentWeatherSummary,
-                            weatherDesc = state.value.weatherInfo!!.currentWeatherData!!.weatherDesc
+                            weatherDesc = state.value.weatherInfo!!.currentWeatherData!!.weatherDesc,
+                            uvIndex = state.value.weatherInfo!!.currentWeatherData!!.uvIndex,
+                            precipProb = state.value.weatherInfo!!.currentWeatherData!!.precipProb
                         )
                         dao.insertWeatherData(weatherData)
 
