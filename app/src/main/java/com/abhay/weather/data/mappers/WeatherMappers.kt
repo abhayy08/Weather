@@ -37,16 +37,16 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
     val uvIndex = currentConditions.uvindex
     val precip = currentConditions.precipprob
 
-    val sunriseT = currentConditions.sunrise
-    val sunsetT = currentConditions.sunset
+    val sunrise = currentConditions.sunrise
+    val sunset = currentConditions.sunset
 
-    val sunrise = LocalTime
-        .parse(sunriseT, DateTimeFormatter.ofPattern("HH:mm:ss"))
-        .format(DateTimeFormatter.ofPattern("h:mm a"))
-
-    val sunset = LocalTime
-        .parse(sunsetT, DateTimeFormatter.ofPattern("HH:mm:ss"))
-        .format(DateTimeFormatter.ofPattern("h:mm a"))
+//    val sunrise = LocalTime
+//        .parse(sunriseT, DateTimeFormatter.ofPattern("HH:mm:ss"))
+//        .format(DateTimeFormatter.ofPattern("h:mm a"))
+//
+//    val sunset = LocalTime
+//        .parse(sunsetT, DateTimeFormatter.ofPattern("HH:mm:ss"))
+//        .format(DateTimeFormatter.ofPattern("h:mm a"))
 
     val date = LocalDate.now().toString()
     val formattedDate =
