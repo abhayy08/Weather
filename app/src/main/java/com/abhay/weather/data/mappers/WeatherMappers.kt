@@ -15,12 +15,7 @@ import java.util.Locale
 
 fun WeatherDto2.toWeatherInfo(): WeatherInfo {
 
-    val currentHour = days[0].hours.find { hour ->
-        val now = LocalTime.now()
-        val nearestHour = now.truncatedTo(ChronoUnit.HOURS)
-        val formatted = nearestHour.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
-        formatted == hour.datetime
-    }
+
     val temp = currentConditions.temp
     val weatherDesc = currentConditions.conditions
     val feelsLike = currentConditions.feelslike
@@ -37,16 +32,8 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
     val uvIndex = currentConditions.uvindex
     val precip = currentConditions.precipprob
 
-    val sunriseT = currentConditions.sunrise
-    val sunsetT = currentConditions.sunset
-
-    val sunrise = LocalTime
-        .parse(sunriseT, DateTimeFormatter.ofPattern("HH:mm:ss"))
-        .format(DateTimeFormatter.ofPattern("h:mm a"))
-
-    val sunset = LocalTime
-        .parse(sunsetT, DateTimeFormatter.ofPattern("HH:mm:ss"))
-        .format(DateTimeFormatter.ofPattern("h:mm a"))
+    val sunrise = currentConditions.sunrise
+    val sunset = currentConditions.sunset
 
     val date = LocalDate.now().toString()
     val formattedDate =

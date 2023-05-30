@@ -10,13 +10,15 @@ import javax.inject.Inject
 
 class NetworkConnectivity @Inject constructor(
     val application: Application
-): NetworkConnectivityChecker {
+) : NetworkConnectivityChecker {
     override fun isOnline(): Boolean {
         var available = false
-        val connectivityManager = application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val connections = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        val connectivityManager =
+            application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connections =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
 
-        if(connections != null){
+        if (connections != null) {
             if (connections.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
                 connections.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
             ) {
@@ -27,9 +29,9 @@ class NetworkConnectivity @Inject constructor(
     }
 
     override fun isGpsEnabled(): Boolean {
-        val locationManager = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+        val locationManager =
+            application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        return isGpsEnabled
     }
 }

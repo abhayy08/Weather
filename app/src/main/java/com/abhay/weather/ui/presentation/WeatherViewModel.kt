@@ -12,12 +12,10 @@ import com.abhay.weather.domain.repository.WeatherRepository
 import com.abhay.weather.domain.util.Resource
 import com.abhay.weather.domain.weather.WeatherInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.lang.Thread.State
 import javax.inject.Inject
 
 @HiltViewModel

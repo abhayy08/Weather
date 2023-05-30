@@ -11,7 +11,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,12 +22,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,15 +37,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abhay.weather.R
@@ -58,6 +50,8 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
 
@@ -101,11 +95,12 @@ fun WeatherUi2(
                         )
                         isExpanded = !isExpanded
                     }
-                )
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
                 modifier = modifier
-                    .padding(20.dp, 30.dp)
+                    .padding(20.dp, 10.dp)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -156,7 +151,14 @@ fun WeatherUi2(
                     )
                 }
             }
-
+            Icon(
+                painter = painterResource(
+                    id = if (!isExpanded) R.drawable.dropdown else R.drawable.dropup
+                ),
+                contentDescription = null,
+                tint = Color.Black,
+                modifier = modifier.size(35.dp)
+            )
         }
         Spacer(modifier = modifier.height(15.dp))
         Card(
@@ -173,7 +175,7 @@ fun WeatherUi2(
                 .padding(15.dp, 10.dp),
             colors = CardDefaults.cardColors(Color.DarkGray)
         ) {
-            WeatherForecast(state = state.value, color = Color.DarkGray)
+            WeatherForecast(state = state.value)
         }
         Row(
             modifier = modifier
@@ -213,11 +215,27 @@ fun WeatherUi2(
                 unit = " %"
             )
         }
+
         SunsetSunriseProgress(
             sunrise = data.sunrise,
-            sunset = data.sunset
+            sunset = data.sunset,
         )
     }
+}
+
+fun calculatePercentageDifference(
+    currentTime: LocalTime,
+    initialTime: LocalTime,
+    finalTime: LocalTime
+): Float {
+    val currentTimeSeconds = currentTime.toSecondOfDay().toFloat()
+    val finalTimeSeconds = finalTime.toSecondOfDay().toFloat()
+    val initialTimeSeconds = initialTime.toSecondOfDay().toFloat()
+    val howMuchTime = (currentTimeSeconds - initialTimeSeconds)
+    val total = (finalTimeSeconds - initialTimeSeconds)
+
+
+    return (howMuchTime / total)
 }
 
 @Composable
@@ -226,18 +244,32 @@ fun SunsetSunriseProgress(
     sunset: String,
     modifier: Modifier = Modifier
 ) {
+
+    val formattedSunrise = LocalTime
+        .parse(sunrise, DateTimeFormatter.ofPattern("HH:mm:ss"))
+        .format(DateTimeFormatter.ofPattern("h:mm a"))
+
+    val formattedSunset = LocalTime
+        .parse(sunset, DateTimeFormatter.ofPattern("HH:mm:ss"))
+        .format(DateTimeFormatter.ofPattern("h:mm a"))
+
+    val finalTime = LocalTime.parse(sunset, DateTimeFormatter.ofPattern("HH:mm:ss"))
+    val initialTime = LocalTime.parse(sunrise, DateTimeFormatter.ofPattern("HH:mm:ss"))
+    val time = LocalTime.now()
+
+    val timeLeftInSunset = calculatePercentageDifference(time, initialTime, finalTime)
+
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(10.dp, 10.dp)
+            .padding(15.dp, 10.dp)
             .height(170.dp),
         colors = CardDefaults.cardColors(Color.DarkGray),
     ) {
         Row(
             modifier = modifier
-                .fillMaxSize()
-                .padding(15.dp),
+                .padding(15.dp)
+                .fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -258,7 +290,7 @@ fun SunsetSunriseProgress(
                     text = "Sunrise",
                     fontSize = 25.sp,
                     color = Color.LightGray,
-                    modifier =modifier.offset(y=10.dp)
+                    modifier = modifier.offset(y = 10.dp)
                 )
                 Divider(
                     modifier = modifier
@@ -267,15 +299,15 @@ fun SunsetSunriseProgress(
                         .align(Alignment.CenterHorizontally), thickness = 2.dp, color = Color.Gray
                 )
                 Text(
-                    text = sunrise,
+                    text = formattedSunrise,
                     fontSize = 20.sp,
                     color = Color.Gray,
                 )
             }
             CircularProgressBar(
-                modifier = modifier.offset(y = 5.dp),
+                modifier = modifier.offset(y = 10.dp),
                 radius = 65.dp,
-                percentage = 1f,
+                percentage = if (timeLeftInSunset > 0 && timeLeftInSunset <= 1) timeLeftInSunset else 0f,
                 color = Color.Gray
             )
             Column(
@@ -295,7 +327,7 @@ fun SunsetSunriseProgress(
                     text = "Sunset",
                     fontSize = 25.sp,
                     color = Color.LightGray,
-                    modifier =modifier.offset(y=10.dp)
+                    modifier = modifier.offset(y = 10.dp)
                 )
                 Divider(
                     modifier = modifier
@@ -304,7 +336,7 @@ fun SunsetSunriseProgress(
                         .align(Alignment.CenterHorizontally), thickness = 2.dp, color = Color.Gray
                 )
                 Text(
-                    text = sunset,
+                    text = formattedSunset,
                     fontSize = 20.sp,
                     color = Color.Gray,
                 )
@@ -325,7 +357,7 @@ fun DetailCard(
         modifier = modifier
             .padding(10.dp, 0.dp)
             .wrapContentHeight()
-            .width(180.dp),
+            .width(190.dp),
         colors = CardDefaults.cardColors(Color.DarkGray)
     ) {
         Column(

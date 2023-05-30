@@ -15,6 +15,7 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+@Suppress("DEPRECATION")
 class WeatherRepositoryImpl @Inject constructor(
     private val api: WeatherApi,
     private val app: Application
@@ -40,26 +41,26 @@ class WeatherRepositoryImpl @Inject constructor(
             val geocoder = Geocoder(app, Locale.getDefault())
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
                 val addressList = geocoder.getFromLocation(lat, long, 1)
-                 if (addressList!!.isNotEmpty()) {
+                if (addressList!!.isNotEmpty()) {
                     val address = addressList[0]
                     cont.resume(address.subLocality)
                 } else {
-                   cont.resume("")
+                    cont.resume("")
                 }
             } else {
                 geocoder.getFromLocation(lat, long, 1,
-                object : Geocoder.GeocodeListener {
-                    override fun onGeocode(results: MutableList<Address>) {
-                        if (results.isNotEmpty()) {
-                            val address = results[0]
-                            val city = address.subLocality
-                            cont.resume(city)
-                        } else {
-                            cont.resume("")
+                    object : Geocoder.GeocodeListener {
+                        override fun onGeocode(results: MutableList<Address>) {
+                            if (results.isNotEmpty()) {
+                                val address = results[0]
+                                val city = address.subLocality
+                                cont.resume(city)
+                            } else {
+                                cont.resume("")
+                            }
                         }
-                    }
 
-                })
+                    })
             }
         }
 
