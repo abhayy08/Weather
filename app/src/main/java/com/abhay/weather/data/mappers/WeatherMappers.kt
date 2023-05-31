@@ -14,8 +14,6 @@ import java.util.Locale
 
 
 fun WeatherDto2.toWeatherInfo(): WeatherInfo {
-
-
     val temp = currentConditions.temp
     val weatherDesc = currentConditions.conditions
     val feelsLike = currentConditions.feelslike
@@ -34,6 +32,7 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
 
     val sunrise = currentConditions.sunrise
     val sunset = currentConditions.sunset
+
 
     val date = LocalDate.now().toString()
     val formattedDate =
