@@ -67,7 +67,9 @@ class WeatherViewModel @Inject constructor(
                             currentWeatherSummary = state.value.weatherInfo!!.currentWeatherData!!.currentWeatherSummary,
                             weatherDesc = state.value.weatherInfo!!.currentWeatherData!!.weatherDesc,
                             uvIndex = state.value.weatherInfo!!.currentWeatherData!!.uvIndex,
-                            precipProb = state.value.weatherInfo!!.currentWeatherData!!.precipProb
+                            precipProb = state.value.weatherInfo!!.currentWeatherData!!.precipProb,
+                            longitude = location.longitude,
+                            latitude = location.latitude
                         )
                         dao.insertWeatherData(weatherData)
 
@@ -113,10 +115,9 @@ class WeatherViewModel @Inject constructor(
                 )
             }
 
-            locationTracker.getCurrentLocation()?.let { location ->
-                val locationName = repository.getLocationName(location.latitude, location.longitude)
-                when (val result =
-                    repository.getWeatherData(location.latitude, location.longitude)) {
+            if (!isGpsOn() && data != null) {
+                val locationName = repository.getLocationName(data.latitude, data.longitude)
+                when (val result = repository.getWeatherData(data.latitude, data.longitude)) {
                     is Resource.Success -> {
                         _state.update { it ->
                             it.copy(
@@ -124,7 +125,7 @@ class WeatherViewModel @Inject constructor(
                                     it!!.locationName = locationName
                                 },
                                 isLoading = false,
-                                error = null
+                                error = "Turn on location service for latest updates on current location"
                             )
                         }
                         val weatherData = WeatherData(
@@ -143,7 +144,9 @@ class WeatherViewModel @Inject constructor(
                             currentWeatherSummary = state.value.weatherInfo!!.currentWeatherData!!.currentWeatherSummary,
                             weatherDesc = state.value.weatherInfo!!.currentWeatherData!!.weatherDesc,
                             uvIndex = state.value.weatherInfo!!.currentWeatherData!!.uvIndex,
-                            precipProb = state.value.weatherInfo!!.currentWeatherData!!.precipProb
+                            precipProb = state.value.weatherInfo!!.currentWeatherData!!.precipProb,
+                            longitude = data.longitude,
+                            latitude = data.latitude
                         )
                         dao.insertWeatherData(weatherData)
 
@@ -155,19 +158,67 @@ class WeatherViewModel @Inject constructor(
                     is Resource.Error -> {
                         _state.update {
                             it.copy(
-                                weatherInfo = data,
-                                isLoading = false,
-                                error = result.message
+                                weatherInfo = data, isLoading = false, error = result.message
                             )
                         }
                     }
                 }
-            } ?: kotlin.run {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        error = "Make Sure you have granted location permission and turned on your location"
-                    )
+            } else {
+                locationTracker.getCurrentLocation()?.let { location ->
+                    val locationName =
+                        repository.getLocationName(location.latitude, location.longitude)
+                    when (val result =
+                        repository.getWeatherData(location.latitude, location.longitude)) {
+                        is Resource.Success -> {
+                            _state.update { it ->
+                                it.copy(
+                                    weatherInfo = result.data.also {
+                                        it!!.locationName = locationName
+                                    }, isLoading = false, error = null
+                                )
+                            }
+                            val weatherData = WeatherData(
+                                id = 0,
+                                locationName = state.value.weatherInfo?.locationName ?: "",
+                                temp = state.value.weatherInfo!!.currentWeatherData!!.temp,
+                                tempMax = state.value.weatherInfo!!.currentWeatherData!!.tempMax,
+                                tempMin = state.value.weatherInfo!!.currentWeatherData!!.tempMin,
+                                feelsLike = state.value.weatherInfo!!.currentWeatherData!!.feelsLike,
+                                visibility = state.value.weatherInfo!!.currentWeatherData!!.visibility,
+                                pressure = state.value.weatherInfo!!.currentWeatherData!!.pressure,
+                                humidity = state.value.weatherInfo!!.currentWeatherData!!.humidity,
+                                windSpeed = state.value.weatherInfo!!.currentWeatherData!!.windSpeed,
+                                sunrise = state.value.weatherInfo!!.currentWeatherData!!.sunrise,
+                                sunset = state.value.weatherInfo!!.currentWeatherData!!.sunset,
+                                currentWeatherSummary = state.value.weatherInfo!!.currentWeatherData!!.currentWeatherSummary,
+                                weatherDesc = state.value.weatherInfo!!.currentWeatherData!!.weatherDesc,
+                                uvIndex = state.value.weatherInfo!!.currentWeatherData!!.uvIndex,
+                                precipProb = state.value.weatherInfo!!.currentWeatherData!!.precipProb,
+                                longitude = location.longitude,
+                                latitude = location.latitude
+                            )
+                            dao.insertWeatherData(weatherData)
+
+                            result.data!!.weatherForecastDetails!!.forEachIndexed { index, day ->
+                                dao.insertDay(day.toDays(index + 1))
+                            }
+                        }
+
+                        is Resource.Error -> {
+                            _state.update {
+                                it.copy(
+                                    weatherInfo = data, isLoading = false, error = result.message
+                                )
+                            }
+                        }
+                    }
+                } ?: kotlin.run {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            error = "Make Sure you have granted location permission and turned on your location"
+                        )
+                    }
                 }
             }
         }
@@ -175,5 +226,9 @@ class WeatherViewModel @Inject constructor(
 
     fun isWifiOn(): Boolean {
         return connectivity.isOnline()
+    }
+
+    private fun isGpsOn(): Boolean {
+        return connectivity.isGpsEnabled()
     }
 }

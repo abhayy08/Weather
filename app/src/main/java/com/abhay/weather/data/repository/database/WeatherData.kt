@@ -22,4 +22,6 @@ data class WeatherData(
     val weatherDesc: String,
     val uvIndex: Int,
     val precipProb: Int,
+    val longitude: Double,
+    val latitude: Double,
 )

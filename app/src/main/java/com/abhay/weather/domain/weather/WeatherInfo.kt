@@ -7,4 +7,6 @@ data class  WeatherInfo(
     val weatherForecastDetails: List<Day>?,
     val currentHourlyForecast: List<Hour>,
     var locationName: String = "",
+    val longitude: Double,
+    val latitude: Double
 )

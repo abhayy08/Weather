@@ -2,6 +2,7 @@ package com.abhay.weather.ui.presentation
 
 import android.os.VibrationEffect
 import android.os.Vibrator
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
 import androidx.compose.animation.animateContentSize
@@ -39,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -46,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abhay.weather.R
 import com.abhay.weather.ui.customcomponents.CircularProgressBar
+import com.abhay.weather.ui.theme.sec
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -71,37 +74,43 @@ fun WeatherUi2(
     state.value.weatherInfo?.currentWeatherData?.let { data ->
         Column(
             modifier = modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .background(
-                    color = color,
-                    shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
-                )
-                .animateContentSize(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioLowBouncy,
-                        stiffness = Spring.StiffnessMediumLow
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            sec,
+                            Color.Gray
+                        )
                     )
                 )
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = {
-                        vibrator.cancel()
-                        vibrator.vibrate(
-                            VibrationEffect.createOneShot(
-                                70,
-                                VibrationEffect.DEFAULT_AMPLITUDE
-                            )
-                        )
-                        isExpanded = !isExpanded
-                    }
-                ),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
                 modifier = modifier
-                    .padding(20.dp, 10.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .background(
+                        color = color,
+                        shape = RoundedCornerShape(bottomStart = 30.dp)
+                    )
+                    .animateContentSize(
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioLowBouncy,
+                            stiffness = Spring.StiffnessMediumLow
+                        )
+                    )
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = {
+                            vibrator.cancel()
+                            vibrator.vibrate(
+                                VibrationEffect.createOneShot(
+                                    70,
+                                    VibrationEffect.DEFAULT_AMPLITUDE
+                                )
+                            )
+                            isExpanded = !isExpanded
+                        }
+                    ),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = modifier.height(15.dp))
@@ -150,76 +159,87 @@ fun WeatherUi2(
                         feelsLike = data.feelsLike
                     )
                 }
-            }
-            Icon(
-                painter = painterResource(
-                    id = if (!isExpanded) R.drawable.dropdown else R.drawable.dropup
-                ),
-                contentDescription = null,
-                tint = Color.Black,
-                modifier = modifier.size(35.dp)
-            )
-        }
-        Spacer(modifier = modifier.height(15.dp))
-        Card(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(15.dp, 10.dp),
-            colors = CardDefaults.cardColors(Color.DarkGray)
-        ) {
-            DailySummary(state = state.value)
-        }
-        Card(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(15.dp, 10.dp),
-            colors = CardDefaults.cardColors(Color.DarkGray)
-        ) {
-            WeatherForecast(state = state.value)
-        }
-        Row(
-            modifier = modifier
-                .padding(5.dp, 10.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            DetailCard(
-                res = R.drawable.sunny,
-                text = "UV Index",
-                value = data.uvIndex,
-                unit = ""
-            )
-            DetailCard(
-                res = R.drawable.eye,
-                text = "Visibility",
-                value = data.visibility.toInt(),
-                unit = " km"
-            )
-        }
-        Row(
-            modifier = modifier
-                .padding(5.dp, 10.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            DetailCard(
-                res = R.drawable.waves,
-                text = "Pressure",
-                value = data.pressure.toInt(),
-                unit = " hPa"
-            )
-            DetailCard(
-                res = R.drawable.precip,
-                text = "Precip Probability",
-                value = data.precipProb,
-                unit = " %"
-            )
-        }
 
-        SunsetSunriseProgress(
-            sunrise = data.sunrise,
-            sunset = data.sunset,
-        )
+                Icon(
+                    painter = painterResource(
+                        id = if (!isExpanded) R.drawable.dropdown else R.drawable.dropup
+                    ),
+                    contentDescription = null,
+                    tint = Color.Black,
+                    modifier = modifier.size(35.dp)
+                )
+            }
+            Column(
+                modifier = modifier
+                    .background(
+                        color = sec,
+                        shape = RoundedCornerShape(topEnd = 30.dp)
+                    )
+            ) {
+                Spacer(modifier = modifier.height(10.dp))
+                Card(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(15.dp, 10.dp),
+                    colors = CardDefaults.cardColors(Color.DarkGray),
+                    shape = RoundedCornerShape(20.dp)
+                ) {
+                    DailySummary(state = state.value)
+                }
+                Card(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(15.dp, 10.dp),
+                    colors = CardDefaults.cardColors(Color.DarkGray),
+                    shape = RoundedCornerShape(20.dp)
+                ) {
+                    WeatherForecast(state = state.value)
+                }
+                Row(
+                    modifier = modifier
+                        .padding(5.dp, 10.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    DetailCard(
+                        res = R.drawable.sunny,
+                        text = "UV Index",
+                        value = data.uvIndex,
+                        unit = ""
+                    )
+                    DetailCard(
+                        res = R.drawable.eye,
+                        text = "Visibility",
+                        value = data.visibility.toInt(),
+                        unit = " km"
+                    )
+                }
+                Row(
+                    modifier = modifier
+                        .padding(5.dp, 10.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    DetailCard(
+                        res = R.drawable.waves,
+                        text = "Pressure",
+                        value = data.pressure.toInt(),
+                        unit = " hPa"
+                    )
+                    DetailCard(
+                        res = R.drawable.precip,
+                        text = "Precip Probability",
+                        value = data.precipProb,
+                        unit = " %"
+                    )
+                }
+
+                SunsetSunriseProgress(
+                    sunrise = data.sunrise,
+                    sunset = data.sunset,
+                )
+            }
+        }
     }
 }
 
@@ -265,6 +285,7 @@ fun SunsetSunriseProgress(
             .padding(15.dp, 10.dp)
             .height(170.dp),
         colors = CardDefaults.cardColors(Color.DarkGray),
+        shape = RoundedCornerShape(20.dp)
     ) {
         Row(
             modifier = modifier
@@ -358,7 +379,8 @@ fun DetailCard(
             .padding(10.dp, 0.dp)
             .wrapContentHeight()
             .width(190.dp),
-        colors = CardDefaults.cardColors(Color.DarkGray)
+        colors = CardDefaults.cardColors(Color.DarkGray),
+        shape = RoundedCornerShape(20.dp)
     ) {
         Column(
             modifier = modifier

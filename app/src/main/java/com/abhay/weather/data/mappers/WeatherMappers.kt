@@ -59,12 +59,16 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
         currentWeatherData = currentWeather,
         weatherForecastDetails = listOfDays,
         currentHourlyForecast = currentHourlyForecast,
-        locationName = ""
+        locationName = "",
+        longitude = 0.0,
+        latitude = 0.0,
     )
 }
 
 fun WeatherDataWithDays.toWeatherInfo(): WeatherInfo {
     val locationName = weatherData.locationName
+    val long = weatherData.longitude
+    val lat = weatherData.latitude
     val daysList = days
     val date = LocalDate.now().toString()
     val formattedDate =
@@ -94,7 +98,9 @@ fun WeatherDataWithDays.toWeatherInfo(): WeatherInfo {
         currentWeatherData = currentWeatherDetails,
         weatherForecastDetails = daysList.map { it.toDay() },
         currentHourlyForecast = emptyList(),
-        locationName = locationName
+        locationName = locationName,
+        longitude = long,
+        latitude = lat
     )
 }
 
