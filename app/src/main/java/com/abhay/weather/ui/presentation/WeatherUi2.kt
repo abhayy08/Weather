@@ -2,7 +2,6 @@ package com.abhay.weather.ui.presentation
 
 import android.os.VibrationEffect
 import android.os.Vibrator
-import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
 import androidx.compose.animation.animateContentSize
@@ -40,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -75,21 +73,14 @@ fun WeatherUi2(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(
-                            sec,
-                            Color.Gray
-                        )
-                    )
-                )
+                .background(sec)
         ) {
             Column(
                 modifier = modifier
                     .fillMaxWidth()
                     .background(
                         color = color,
-                        shape = RoundedCornerShape(bottomStart = 30.dp)
+                        shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
                     )
                     .animateContentSize(
                         animationSpec = spring(

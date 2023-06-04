@@ -48,7 +48,7 @@ class WeatherViewModel @Inject constructor(
                                     it!!.locationName = locationName
                                 },
                                 isRefreshing = false,
-                                error = null
+                                error = null,
                             )
                         }
                         val weatherData = WeatherData(
