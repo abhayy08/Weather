@@ -12,7 +12,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.Priority.PRIORITY_BALANCED_POWER_ACCURACY
+import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
@@ -37,8 +37,8 @@ class DefaultLocationTracker @Inject constructor(
             return null
         }
 
-        val request = LocationRequest.Builder(PRIORITY_BALANCED_POWER_ACCURACY, 20 * 60 * 1000)
-            .setMinUpdateIntervalMillis(10 * 60 * 1000)
+        val request = LocationRequest.Builder(PRIORITY_HIGH_ACCURACY, 10000)
+            .setMinUpdateIntervalMillis(5000)
             .build()
 
         val deferred = CompletableDeferred<Location?>()
@@ -48,7 +48,7 @@ class DefaultLocationTracker @Inject constructor(
                 val location = result.locations.firstOrNull()
                 location?.let {
                     deferred.complete(it)
-                    locationClient.removeLocationUpdates(this)
+//                    locationClient.removeLocationUpdates(this)
                     Log.d("Location123", "Latitude: ${it.latitude}, Longitude: ${it.longitude}")
                 }
             }

@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -403,7 +404,8 @@ fun DailySummary(
     Column(
         modifier = modifier
             .padding(25.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .wrapContentWidth(),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.Start
     ) {
@@ -420,13 +422,7 @@ fun DailySummary(
                 .align(Alignment.CenterHorizontally), thickness = 2.dp, color = Color.Gray
         )
         Text(
-            text = data.currentWeatherSummary,
-            style = MaterialTheme.typography.labelSmall,
-            fontSize = 16.sp,
-            color = Color.Gray
-        )
-        Text(
-            text = "The Temperature is felt in the range of ${data.tempMax}° and ${data.tempMin}°.",
+            text = "${data.currentWeatherSummary} The Temperature is felt in the range of ${data.tempMax}° and ${data.tempMin}°.",
             style = MaterialTheme.typography.labelSmall,
             fontSize = 16.sp,
             color = Color.Gray

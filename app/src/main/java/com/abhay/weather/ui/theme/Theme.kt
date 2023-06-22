@@ -29,7 +29,7 @@ fun WeatherTheme(
     SideEffect {
         systemUiController.setSystemBarsColor(
             color = sec,
-            darkIcons = true,
+            darkIcons = false,
         )
         val window = (view.context as Activity).window
         window.statusBarColor = color.toArgb()
