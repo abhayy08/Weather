@@ -3,6 +3,7 @@ package com.abhay.weather.ui.presentation
 import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,6 +14,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -39,8 +41,7 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: WeatherViewModel by viewModels()
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
-
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +63,10 @@ class MainActivity : ComponentActivity() {
                 viewModel.state.value.isLoading
             }
         }
-
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
         setContent {
             val state = viewModel.state.collectAsState()
             val swipeRefreshState =
@@ -72,7 +76,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
-                ) {
+                ) { paddingValues->
                     SwipeRefresh(
                         state = swipeRefreshState,
                         onRefresh = viewModel::refresh,
@@ -89,11 +93,14 @@ class MainActivity : ComponentActivity() {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-
+                                .background(Color.Gray)
+                                
                         ) {
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
+                                    .padding(top = 35.dp)
+                                    .padding(paddingValues)
                                     .verticalScroll(rememberScrollState())
                             ) {
                                 WeatherUi2(

@@ -28,7 +28,7 @@ fun WeatherDto2.toWeatherInfo(): WeatherInfo {
     val visibility = currentConditions.visibility
     val listOfDays = days
     val uvIndex = currentConditions.uvindex
-    val precip = currentConditions.precipprob
+    val precip = currentConditions.precipprob ?: 0
 
     val sunrise = currentConditions.sunrise
     val sunset = currentConditions.sunset

@@ -25,12 +25,7 @@ fun WeatherTheme(
 ) {
     val colorScheme = UiColorScheme
     val view = LocalView.current
-    val systemUiController = rememberSystemUiController()
     SideEffect {
-        systemUiController.setSystemBarsColor(
-            color = sec,
-            darkIcons = false,
-        )
         val window = (view.context as Activity).window
         window.statusBarColor = color.toArgb()
         WindowCompat.getInsetsController(window, view)

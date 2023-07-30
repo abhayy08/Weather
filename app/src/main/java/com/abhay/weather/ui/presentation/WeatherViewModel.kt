@@ -144,7 +144,7 @@ class WeatherViewModel @Inject constructor(
                             currentWeatherSummary = state.value.weatherInfo!!.currentWeatherData!!.currentWeatherSummary,
                             weatherDesc = state.value.weatherInfo!!.currentWeatherData!!.weatherDesc,
                             uvIndex = state.value.weatherInfo!!.currentWeatherData!!.uvIndex,
-                            precipProb = state.value.weatherInfo!!.currentWeatherData!!.precipProb,
+                            precipProb = state.value.weatherInfo!!.currentWeatherData!!.precipProb ,
                             longitude = data.longitude,
                             latitude = data.latitude
                         )

@@ -9,7 +9,7 @@ data class Hour(
     val feelslike: Double,
     val humidity: Double,
     val icon: String,
-    val precip: Double?,
+    val precip: Double,
     val precipprob: Double,
     //val preciptype: List<String>,
     val pressure: Double,
