@@ -10,7 +10,7 @@ data class CurrentConditions(
     val icon: String,
     val moonphase: Double,
     val precip: Double?,
-    val precipprob: Int,
+    val precipprob: Int?,
     val preciptype: Any,
     val pressure: Double,
     val snow: Int,

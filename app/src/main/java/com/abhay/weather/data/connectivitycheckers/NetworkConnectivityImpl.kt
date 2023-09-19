@@ -8,7 +8,7 @@ import android.net.NetworkCapabilities
 import com.abhay.weather.domain.connectivitycheckers.NetworkConnectivityChecker
 import javax.inject.Inject
 
-class NetworkConnectivity @Inject constructor(
+class NetworkConnectivityImpl @Inject constructor(
     val application: Application
 ) : NetworkConnectivityChecker {
     override fun isOnline(): Boolean {

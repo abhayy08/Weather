@@ -165,7 +165,7 @@ class WeatherViewModel @Inject constructor(
                 }
             } else {
                 locationTracker.getCurrentLocation()?.let { location ->
-                    val locationName =
+                    val locationName : String =
                         repository.getLocationName(location.latitude, location.longitude)
                     when (val result =
                         repository.getWeatherData(location.latitude, location.longitude)) {
@@ -173,7 +173,7 @@ class WeatherViewModel @Inject constructor(
                             _state.update { it ->
                                 it.copy(
                                     weatherInfo = result.data.also {
-                                        it!!.locationName = locationName
+                                        it!!.locationName = locationName ?: "Location name error"
                                     }, isLoading = false, error = null
                                 )
                             }
