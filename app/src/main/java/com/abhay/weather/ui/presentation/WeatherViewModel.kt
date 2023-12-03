@@ -173,7 +173,7 @@ class WeatherViewModel @Inject constructor(
                             _state.update { it ->
                                 it.copy(
                                     weatherInfo = result.data.also {
-                                        it!!.locationName = locationName ?: "Location name error"
+                                        it!!.locationName = locationName
                                     }, isLoading = false, error = null
                                 )
                             }
