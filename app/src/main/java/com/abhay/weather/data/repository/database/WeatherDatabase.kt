@@ -16,7 +16,6 @@ abstract class WeatherDatabase: RoomDatabase() {
     abstract val weatherDataDao: WeatherDataDao
 
     companion object {
-
         @Volatile
         private var INSTANCE : WeatherDatabase? = null
 

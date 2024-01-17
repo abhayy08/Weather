@@ -12,7 +12,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
+import com.google.android.gms.location.Priority.PRIORITY_BALANCED_POWER_ACCURACY
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
@@ -37,7 +37,7 @@ class DefaultLocationTracker @Inject constructor(
             return null
         }
 
-        val request = LocationRequest.Builder(PRIORITY_HIGH_ACCURACY, 10000)
+        val request = LocationRequest.Builder(PRIORITY_BALANCED_POWER_ACCURACY, 10000)
             .setMinUpdateIntervalMillis(5000)
             .build()
 

@@ -151,7 +151,7 @@ class WeatherViewModel @Inject constructor(
                         dao.insertWeatherData(weatherData)
 
                         result.data!!.weatherForecastDetails!!.forEachIndexed { index, day ->
-                            dao.insertDay(day.toDays(index + 1))
+                            dao.insertDay(day.toDays(index))
                         }
                     }
 
