@@ -2,6 +2,7 @@ package com.abhay.weather.ui.presentation
 
 import android.Manifest
 import android.os.Bundle
+import android.view.Surface
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -20,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,58 +71,62 @@ class MainActivity : ComponentActivity() {
             val swipeRefreshState =
                 rememberSwipeRefreshState(isRefreshing = state.value.isRefreshing)
 
-            WeatherTheme(Color.Gray) {
-                Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) { paddingValues->
-                    SwipeRefresh(
-                        state = swipeRefreshState,
-                        onRefresh = viewModel::refresh,
-                        indicator = { state, refreshTrigger ->
-                            SwipeRefreshIndicator(
-                                state = state,
-                                refreshTriggerDistance = refreshTrigger,
-                                backgroundColor = Color.DarkGray,
-                                contentColor = Color.Gray,
-                                fade = true
-                            )
-                        },
-                        indicatorPadding = PaddingValues(25.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxSize()
-                        ){
-                            Column(
-                                modifier = Modifier
-                                    .padding(paddingValues)
-                                    .background(Color.Gray)
-                                    .verticalScroll(rememberScrollState())
+            WeatherTheme() {
+                Surface(
+                    modifier = Modifier.fillMaxSize()
+                ){
+                    Scaffold(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) { paddingValues ->
+                        SwipeRefresh(
+                            state = swipeRefreshState,
+                            onRefresh = viewModel::refresh,
+                            indicator = { state, refreshTrigger ->
+                                SwipeRefreshIndicator(
+                                    state = state,
+                                    refreshTriggerDistance = refreshTrigger,
+                                    backgroundColor = Color.DarkGray,
+                                    contentColor = Color.Gray,
+                                    fade = true
+                                )
+                            },
+                            indicatorPadding = PaddingValues(25.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxSize()
                             ) {
-                                WeatherUi2(
-                                    viewModel = viewModel,
-                                    color = Color.Gray
-                                )
-                            }
-                            if (state.value.isLoading) {
-                                CircularProgressIndicator(
-                                    color = Color.Gray, strokeWidth = 5.dp,
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
-                            }
-                            state.value.error?.let { error ->
-                                if (viewModel.isWifiOn()) {
-                                    Toast.makeText(
-                                        LocalContext.current,
-                                        error,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else {
-                                    Toast.makeText(
-                                        LocalContext.current,
-                                        "Turn on mobile data or connect to wifi",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                Column(
+                                    modifier = Modifier
+                                        .padding(paddingValues)
+                                        .background(Color.Gray)
+                                        .verticalScroll(rememberScrollState())
+                                ) {
+                                    WeatherUi2(
+                                        viewModel = viewModel,
+                                        color = Color.Gray
+                                    )
+                                }
+                                if (state.value.isLoading) {
+                                    CircularProgressIndicator(
+                                        color = Color.Gray, strokeWidth = 5.dp,
+                                        modifier = Modifier.align(Alignment.Center)
+                                    )
+                                }
+                                state.value.error?.let { error ->
+                                    if (viewModel.isWifiOn()) {
+                                        Toast.makeText(
+                                            LocalContext.current,
+                                            error,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            LocalContext.current,
+                                            "Turn on mobile data or connect to wifi",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
                             }
                         }
